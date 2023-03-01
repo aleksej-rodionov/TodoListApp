@@ -1,6 +1,8 @@
 package com.example.todolistapp.feature_todo_list.data.repository
 
 import com.example.todolistapp.feature_todo_list.data.local.TodoDao
+import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodo
+import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodoEntity
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.repository.TodoReposiroty
 import io.reactivex.Flowable
@@ -11,22 +13,28 @@ class TodoRepositoryImpl(
 ): TodoReposiroty {
 
     override fun insertTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        todoDao.insertTodo(todo.toTodoEntity())
     }
 
     override fun updateTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        todoDao.updateRodo(todo.toTodoEntity())
     }
 
     override fun deleteTodo(todo: Todo) {
-        TODO("Not yet implemented")
+        todoDao.deleteTodo(todo.toTodoEntity())
     }
 
     override fun getTodoById(id: Int): Single<Todo> {
-        TODO("Not yet implemented")
+        return todoDao.getTodoById(id).map {
+            it.toTodo()
+        }
     }
 
     override fun getAllTodos(): Flowable<List<Todo>> {
-        TODO("Not yet implemented")
+        return todoDao.getAllTodos().map { entityList ->
+            entityList.map {
+                it.toTodo()
+            }
+        }
     }
 }
