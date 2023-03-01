@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
@@ -40,10 +41,10 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         todoListAdapter = TodoListAdapter(
             requireContext(),
             onTodoClick = {
-                //todo
+                viewModel.onTodoClick(it)
             },
             onCompletedClick = { todo, completed ->
-                //todo
+                viewModel.onCompletedChanged(todo, completed)
             }
         )
 
@@ -56,14 +57,30 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun initObservers() {
         viewModel.todos.observe(viewLifecycleOwner) {
             todoListAdapter?.submitList(it)
+        }
 
+        viewModel.uiEffect.observe(viewLifecycleOwner) {
+            when (it.peekContent()) {
+                is UiEffect.OnNavigateAddTodo -> {
+                    val action =
+                        TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(null)
+                    findNavController().navigate(action)
+                }
+                is UiEffect.OnNavigateEditTodo -> {
+                    val action =
+                        TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(
+                            (it.peekContent() as? UiEffect.OnNavigateEditTodo)?.todo
+                        )
+                    findNavController().navigate(action)
+                }
+            }
         }
     }
 
     private fun initListeners() {
         binding.apply {
             fab.setOnClickListener {
-                //todo
+                viewModel.onAddTodoClick()
             }
         }
     }

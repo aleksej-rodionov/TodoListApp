@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavArgs
+import androidx.navigation.fragment.navArgs
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoEditorBinding
@@ -29,10 +31,16 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTodoEditorBinding.bind(view)
 
+        val args by navArgs<TodoEditorFragmentArgs>()
+        viewModel.setTodo(args.todo)
+
+        initObservers()
     }
 
     private fun initObservers() {
-
+        viewModel.todoText.observe(viewLifecycleOwner) {
+            binding.etText.setText(it)
+        }
     }
 
     override fun onDestroyView() {

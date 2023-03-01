@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/todoListFragment"
         android:name="com.example.todolistapp.feature_todo_list.presentation.todo_list.TodoListFragment"
-        android:label="fragment_todo_list"
-        tools:layout="@layout/fragment_todo_list" >
+        android:label="Список заметок"
+        tools:layout="@layout/fragment_todo_list">
         <action
             android:id="@+id/action_todoListFragment_to_todoEditorFragment"
             app:destination="@id/todoEditorFragment" />
@@ -17,6 +17,12 @@
     <fragment
         android:id="@+id/todoEditorFragment"
         android:name="com.example.todolistapp.feature_todo_list.presentation.todo_editor.TodoEditorFragment"
-        android:label="fragment_todo_editor"
-        tools:layout="@layout/fragment_todo_editor" />
+        android:label="Заметка"
+        tools:layout="@layout/fragment_todo_editor" >
+        <argument
+            android:name="todo"
+            app:argType="com.example.todolistapp.feature_todo_list.domain.model.Todo"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>
