@@ -12,6 +12,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
+private const val TAG = "TodoListViewModel"
+
 class TodoListViewModel @Inject constructor(
     private val reposiroty: TodoReposiroty //todo useCase/interactor
 ) : ViewModel() {
@@ -44,8 +46,8 @@ class TodoListViewModel @Inject constructor(
             }).apply { compDisp.add(this) }
     }
 
-    fun onCompletedChanged(todo: Todo, completed: Boolean) {
-        reposiroty.updateTodo(todo.copy(isCompleted = completed))
+    fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
+        reposiroty.updateTodo(todo.copy(isCompleted = completed).toTodo())
     }
 
 //    fun onTodoClick(todo: Todo) {
@@ -56,7 +58,8 @@ class TodoListViewModel @Inject constructor(
 //        _uiEffect.value = Event(UiEffect.OnNavigateAddTodo)
 //    }
 
-    fun showCompletedChanged(show: Boolean) {
+    fun onShowCompletedChanged(show: Boolean) {
+        Log.d(TAG, "onShowCompletedChanged: $show")
         showCompleted = show
         _todos.value = mapEntriesByShowCompleted(todoItems)
     }

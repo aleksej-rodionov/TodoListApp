@@ -11,5 +11,6 @@
     <color name="main">#3F50A3</color>
     <color name="main_dark">#2E3B77</color>
     <color name="secondary">#E4567F</color>
+    <color name="gray">#ADB5BD</color>
 
 </resources>
