@@ -55,9 +55,10 @@ class TodoListViewModel @Inject constructor(
         super.onCleared()
         compDisp.clear()
     }
+
+    sealed class UiEffect {
+        data class OnNavigateEditTodo(val todo: Todo): UiEffect()
+        object OnNavigateAddTodo: UiEffect()
+    }
 }
 
-sealed class UiEffect {
-    data class OnNavigateEditTodo(val todo: Todo): UiEffect()
-    object OnNavigateAddTodo: UiEffect()
-}

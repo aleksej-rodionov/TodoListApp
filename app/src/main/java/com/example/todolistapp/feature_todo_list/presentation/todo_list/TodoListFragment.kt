@@ -10,6 +10,7 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoListBinding
 import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
+import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import javax.inject.Inject
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
@@ -41,7 +42,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
         todoListAdapter = TodoListAdapter(
             requireContext(),
             onTodoClick = {
-                viewModel.onTodoClick(it)
+//                viewModel.onTodoClick(it)
+                navigateEditTodo(it)
             },
             onCompletedClick = { todo, completed ->
                 viewModel.onCompletedChanged(todo, completed)
@@ -59,30 +61,37 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             todoListAdapter?.submitList(it)
         }
 
-        viewModel.uiEffect.observe(viewLifecycleOwner) {
-            when (it.peekContent()) {
-                is UiEffect.OnNavigateAddTodo -> {
-                    val action =
-                        TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(null)
-                    findNavController().navigate(action)
-                }
-                is UiEffect.OnNavigateEditTodo -> {
-                    val action =
-                        TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(
-                            (it.peekContent() as? UiEffect.OnNavigateEditTodo)?.todo
-                        )
-                    findNavController().navigate(action)
-                }
-            }
-        }
+//        viewModel.uiEffect.observe(viewLifecycleOwner) {
+//            when (it.peekContent()) {
+//                is TodoListViewModel.UiEffect.OnNavigateAddTodo -> {
+//                   navigateAddTodo()
+//                }
+//                is TodoListViewModel.UiEffect.OnNavigateEditTodo -> {
+//                    navigateEditTodo((it.peekContent() as? TodoListViewModel.UiEffect.OnNavigateEditTodo)?.todo)
+//                }
+//            }
+//        }
     }
 
     private fun initListeners() {
         binding.apply {
             fab.setOnClickListener {
-                viewModel.onAddTodoClick()
+//                viewModel.onAddTodoClick()
+                navigateAddTodo()
             }
         }
+    }
+
+    private fun navigateAddTodo() {
+        val action =
+            TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(null)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateEditTodo(todo: Todo?) {
+        val action =
+            TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(todo)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
