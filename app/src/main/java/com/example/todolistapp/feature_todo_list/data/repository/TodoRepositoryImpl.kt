@@ -40,14 +40,23 @@ class TodoRepositoryImpl(
             }.run()
         }.subscribeOn(Schedulers.io())
             .subscribe({
-                Log.d(TAG, "insertTodo: success")
+                Log.d(TAG, "updateTodo: success")
             }, {
-                Log.d(TAG, "insertTodo: error = ${it.message}")
+                Log.d(TAG, "updateTodo: error = ${it.message}")
             })
     }
 
     override fun deleteTodo(todo: Todo) {
-        todoDao.deleteTodo(todo.toTodoEntity())
+        Observable.fromCallable {
+            Runnable {
+                todoDao.deleteTodo(todo.toTodoEntity())
+            }.run()
+        }.subscribeOn(Schedulers.io())
+            .subscribe({
+                Log.d(TAG, "deleteTodo: success")
+            }, {
+                Log.d(TAG, "deleteTodo: error = ${it.message}")
+            })
     }
 
     override fun getTodoById(id: Int): Single<Todo> {

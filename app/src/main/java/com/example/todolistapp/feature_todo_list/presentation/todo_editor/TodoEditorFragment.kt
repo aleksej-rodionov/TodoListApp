@@ -2,6 +2,9 @@ package com.example.todolistapp.feature_todo_list.presentation.todo_editor
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -36,6 +39,8 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTodoEditorBinding.bind(view)
 
+        setHasOptionsMenu(true)
+
         val args by navArgs<TodoEditorFragmentArgs>()
         val todo = args.todo
         viewModel.setTodo(todo)
@@ -51,6 +56,25 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
     override fun onResume() {
         super.onResume()
         etText.setText(viewModel.todoText.value)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (viewModel.todoId == null) {
+            inflater.inflate(R.menu.menu_add_todo, menu)
+        } else {
+            inflater.inflate(R.menu.menu_edit_todo, menu)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_delete -> {
+                viewModel.deleteTodo()
+                navigateBack()
+                true
+            }
+         else ->   super.onOptionsItemSelected(item)
+        }
     }
 
     private fun initObservers() {

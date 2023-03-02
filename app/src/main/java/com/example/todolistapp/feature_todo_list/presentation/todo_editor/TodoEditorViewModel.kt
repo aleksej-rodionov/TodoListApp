@@ -15,7 +15,7 @@ class TodoEditorViewModel @Inject constructor(
     private val reposiroty: TodoReposiroty //todo useCase/interactor
 ): ViewModel() {
 
-    private var todoId: Int? = null
+    var todoId: Int? = null
     private var todoCompleted: Boolean? = false
 
     private val _todoText: MutableLiveData<String> = MutableLiveData()
@@ -52,6 +52,15 @@ class TodoEditorViewModel @Inject constructor(
         }
 
 //        _uiEffect.value = Event(UiEffect.NavigateBack)
+    }
+
+    fun deleteTodo() {
+        val todo = Todo(
+            text = todoText.value ?: "",
+            isCompleted = todoCompleted ?: false,
+            id = todoId
+        )
+        reposiroty.deleteTodo(todo)
     }
 
     sealed class UiEffect {
