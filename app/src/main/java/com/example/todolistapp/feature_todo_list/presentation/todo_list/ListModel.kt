@@ -7,11 +7,11 @@ sealed class ItemModel {
         val text: String,
         val isCompleted: Boolean,
         val id: Int? = null
-    )
+    ): ItemModel()
 
     data class Divider(
         val isCompletedDisplayed: Boolean
-    )
+    ): ItemModel()
 }
 
 fun Todo.toTodoItem(): ItemModel.TodoItem {

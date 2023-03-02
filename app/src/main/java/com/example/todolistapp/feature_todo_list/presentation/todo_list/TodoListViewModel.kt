@@ -19,12 +19,13 @@ class TodoListViewModel @Inject constructor(
     private val compDisp = CompositeDisposable()
 
     private var showCompleted = false
+    private val todoItems = mutableListOf<ItemModel.TodoItem>()
 
-    private val _todos = MutableLiveData<List<Todo>>()
-    val todos: LiveData<List<Todo>> = _todos
+    private val _todos = MutableLiveData<List<ItemModel>>()
+    val todos: LiveData<List<ItemModel>> = _todos
 
-    private val _uiEffect: MutableLiveData<Event<UiEffect>> = MutableLiveData()
-    val uiEffect: LiveData<Event<UiEffect>> = _uiEffect
+//    private val _uiEffect: MutableLiveData<Event<UiEffect>> = MutableLiveData()
+//    val uiEffect: LiveData<Event<UiEffect>> = _uiEffect
 
     init {
         observeAllTodos()
@@ -35,9 +36,9 @@ class TodoListViewModel @Inject constructor(
         output.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                //todo compile list properly
-                _todos.value = it
-
+                todoItems.clear()
+                todoItems.addAll(mapEntriesToTodoItems(it))
+                _todos.value = mapEntriesByShowCompleted(todoItems)
             }, {
                 Log.d("TAG_TODO_LIST", "observeAllTodos: error = ${it.message}")
             }).apply { compDisp.add(this) }
@@ -47,41 +48,44 @@ class TodoListViewModel @Inject constructor(
         reposiroty.updateTodo(todo.copy(isCompleted = completed))
     }
 
-    fun onTodoClick(todo: Todo) {
-        _uiEffect.value = Event(UiEffect.OnNavigateEditTodo(todo))
-    }
-
-    fun onAddTodoClick() {
-        _uiEffect.value = Event(UiEffect.OnNavigateAddTodo)
-    }
+//    fun onTodoClick(todo: Todo) {
+//        _uiEffect.value = Event(UiEffect.OnNavigateEditTodo(todo))
+//    }
+//
+//    fun onAddTodoClick() {
+//        _uiEffect.value = Event(UiEffect.OnNavigateAddTodo)
+//    }
 
     fun showCompletedChanged(show: Boolean) {
-        //todo
+        showCompleted = show
+        _todos.value = mapEntriesByShowCompleted(todoItems)
     }
 
-    private fun mapEntries(entries: List<Todo>) {
+    private fun mapEntriesToTodoItems(entries: List<Todo>): List<ItemModel.TodoItem> {
+        return entries.map {
+            it.toTodoItem()
+        }
+    }
+
+    private fun mapEntriesByShowCompleted(entries: List<ItemModel.TodoItem>): List<ItemModel> {
         val finalList = mutableListOf<ItemModel>()
         val actualTodos = mutableListOf<ItemModel>()
         val completedTodos = mutableListOf<ItemModel>()
         if (showCompleted) {
             entries.forEach {
-                if (!it.isCompleted) actualTodos.add(
-                    it.toTodoItem() as ItemModel
-                )
-                else completedTodos.add(
-                    it.toTodoItem() as ItemModel
-                )
+                if (!it.isCompleted) actualTodos.add(it)
+                else completedTodos.add(it)
             }
         } else {
             entries.forEach {
-                if (!it.isCompleted) actualTodos.add(
-                    it.toTodoItem() as ItemModel
-                )
+                if (!it.isCompleted) actualTodos.add(it)
             }
         }
         finalList.addAll(actualTodos)
         finalList.add(ItemModel.Divider(isCompletedDisplayed = showCompleted) as ItemModel)
         if (showCompleted) finalList.addAll(completedTodos)
+
+        return finalList
     }
 
     override fun onCleared() {

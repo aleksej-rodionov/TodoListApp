@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.example.todolistapp.databinding.ItemTodoBinding
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 
@@ -13,7 +14,7 @@ class TodoListAdapter(
     private val context: Context,
     private val onTodoClick: (Todo) -> Unit,
     private val onCompletedClick: (Todo, Boolean) -> Unit
-) : ListAdapter<Todo, TodoListAdapter.TodoViewHolder>(TodoComparator()) {
+) : ListAdapter<ItemModel, TodoListAdapter.TodoViewHolder>(TodoComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val binding =
@@ -37,20 +38,24 @@ class TodoListAdapter(
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val curItem = getItem(position)
-        if (curItem != null) holder.bind(curItem)
+        if (curItem != null) holder.bindTodo(curItem)
     }
 
     inner class TodoViewHolder(
-        private val binding: ItemTodoBinding,
+        private val binding: ViewBinding,
         private val onItemClick: (Int) -> Unit,
         private val onCheckboxChanged: (Int, Boolean) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(todo: Todo) {
+        fun bindTodo(todo: ItemModel.TodoItem) {
             binding.apply {
                 checkBox.isChecked = todo.isCompleted
                 textView.text = todo.text
             }
+        }
+
+        fun bindDivider(divider: ItemModel.Divider) {
+            binding/appl
         }
 
         init {
@@ -72,11 +77,25 @@ class TodoListAdapter(
         }
     }
 
-    class TodoComparator : DiffUtil.ItemCallback<Todo>() {
-        override fun areItemsTheSame(oldItem: Todo, newItem: Todo) =
-            oldItem.id == newItem.id
+    class TodoComparator : DiffUtil.ItemCallback<ItemModel>() {
+        override fun areItemsTheSame(oldItem: ItemModel, newItem: ItemModel): Boolean {
+            return when (oldItem) {
+                is ItemModel.TodoItem -> {
+                    when (newItem) {
+                        is ItemModel.TodoItem -> oldItem.id == newItem.id
+                        is ItemModel.Divider -> false
+                    }
+                }
+                is ItemModel.Divider -> {
+                    when (newItem) {
+                        is ItemModel.TodoItem -> false
+                        is ItemModel.Divider -> true
+                    }
+                }
+            }
+        }
 
-        override fun areContentsTheSame(oldItem: Todo, newItem: Todo) =
+        override fun areContentsTheSame(oldItem: ItemModel, newItem: ItemModel) =
             oldItem == newItem
     }
 }
