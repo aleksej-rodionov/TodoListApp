@@ -59,15 +59,14 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 //            binding.etText.setText(it)
 //        }
 
-        viewModel.uiEffect.observe(viewLifecycleOwner) {
-            when (it.peekContent()) {
-                is TodoEditorViewModel.UiEffect.NavigateBack -> {
-                    Log.d(TAG, "initObservers: NavigateBack Effect received")
-                    binding.etText.clearFocus()
-                    findNavController().popBackStack()
-                }
-            }
-        }
+//        viewModel.uiEffect.observe(viewLifecycleOwner) {
+//            when (it.peekContent()) {
+//                is TodoEditorViewModel.UiEffect.NavigateBack -> {
+//                    Log.d(TAG, "initObservers: NavigateBack Effect received")
+//                    navigateBack()
+//                }
+//            }
+//        }
     }
 
     private fun initListeners() {
@@ -78,8 +77,14 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
             fab.setOnClickListener {
                 viewModel.onSaveClick()
+                navigateBack()
             }
         }
+    }
+
+    private fun navigateBack() {
+        binding.etText.clearFocus()
+        findNavController().popBackStack()
     }
 
     override fun onDestroyView() {

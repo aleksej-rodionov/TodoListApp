@@ -14,9 +14,11 @@ import javax.inject.Inject
 
 class TodoListViewModel @Inject constructor(
     private val reposiroty: TodoReposiroty //todo useCase/interactor
-): ViewModel() {
+) : ViewModel() {
 
     private val compDisp = CompositeDisposable()
+
+    private var showCompleted = false
 
     private val _todos = MutableLiveData<List<Todo>>()
     val todos: LiveData<List<Todo>> = _todos
@@ -33,14 +35,16 @@ class TodoListViewModel @Inject constructor(
         output.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                //todo compile list properly
                 _todos.value = it
+
             }, {
                 Log.d("TAG_TODO_LIST", "observeAllTodos: error = ${it.message}")
             }).apply { compDisp.add(this) }
     }
 
     fun onCompletedChanged(todo: Todo, completed: Boolean) {
-        //todo
+        reposiroty.updateTodo(todo.copy(isCompleted = completed))
     }
 
     fun onTodoClick(todo: Todo) {
@@ -51,14 +55,43 @@ class TodoListViewModel @Inject constructor(
         _uiEffect.value = Event(UiEffect.OnNavigateAddTodo)
     }
 
+    fun showCompletedChanged(show: Boolean) {
+        //todo
+    }
+
+    private fun mapEntries(entries: List<Todo>) {
+        val finalList = mutableListOf<ItemModel>()
+        val actualTodos = mutableListOf<ItemModel>()
+        val completedTodos = mutableListOf<ItemModel>()
+        if (showCompleted) {
+            entries.forEach {
+                if (!it.isCompleted) actualTodos.add(
+                    it.toTodoItem() as ItemModel
+                )
+                else completedTodos.add(
+                    it.toTodoItem() as ItemModel
+                )
+            }
+        } else {
+            entries.forEach {
+                if (!it.isCompleted) actualTodos.add(
+                    it.toTodoItem() as ItemModel
+                )
+            }
+        }
+        finalList.addAll(actualTodos)
+        finalList.add(ItemModel.Divider(isCompletedDisplayed = showCompleted) as ItemModel)
+        if (showCompleted) finalList.addAll(completedTodos)
+    }
+
     override fun onCleared() {
         super.onCleared()
         compDisp.clear()
     }
 
     sealed class UiEffect {
-        data class OnNavigateEditTodo(val todo: Todo): UiEffect()
-        object OnNavigateAddTodo: UiEffect()
+        data class OnNavigateEditTodo(val todo: Todo) : UiEffect()
+        object OnNavigateAddTodo : UiEffect()
     }
 }
 

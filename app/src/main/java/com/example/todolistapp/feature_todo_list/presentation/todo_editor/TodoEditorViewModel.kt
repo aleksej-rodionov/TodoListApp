@@ -37,7 +37,6 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onSaveClick() {
         if (todoId == null) {
-            //todo create Todo
             val newTodo = Todo(
                 text = todoText.value ?: "",
                 isCompleted = false
@@ -52,7 +51,7 @@ class TodoEditorViewModel @Inject constructor(
             reposiroty.updateTodo(updatedTodo)
         }
 
-        _uiEffect.value = Event(UiEffect.NavigateBack)
+//        _uiEffect.value = Event(UiEffect.NavigateBack)
     }
 
     sealed class UiEffect {

@@ -1,6 +1,7 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,6 +13,8 @@ import com.example.todolistapp.databinding.FragmentTodoListBinding
 import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import javax.inject.Inject
+
+private const val TAG = "TodoListFragment"
 
 class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
 
@@ -58,6 +61,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
 
     private fun initObservers() {
         viewModel.todos.observe(viewLifecycleOwner) {
+            Log.d(TAG, "initObservers: list = $it")
             todoListAdapter?.submitList(it)
         }
 
