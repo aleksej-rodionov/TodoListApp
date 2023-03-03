@@ -4,7 +4,7 @@ import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-interface TodoReposiroty {
+interface TodoRepository {
 
     fun insertTodo(todo: Todo)
 

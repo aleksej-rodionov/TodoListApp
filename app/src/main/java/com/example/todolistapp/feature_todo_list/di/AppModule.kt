@@ -5,10 +5,11 @@ import android.content.Context
 import androidx.room.Room
 import com.example.todolistapp.feature_todo_list.data.local.TodoDatabase
 import com.example.todolistapp.feature_todo_list.data.repository.TodoRepositoryImpl
-import com.example.todolistapp.feature_todo_list.domain.repository.TodoReposiroty
+import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
 import com.example.todolistapp.feature_todo_list.domain.use_case.CheckIfAlarmSet
 import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.use_case.SetAlarm
+import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoRepository(db: TodoDatabase): TodoReposiroty {
+    fun provideTodoRepository(db: TodoDatabase): TodoRepository {
         return TodoRepositoryImpl(db.dao())
     }
 
@@ -49,5 +50,11 @@ class AppModule {
     @Singleton
     fun provideCheckIfAlarmSet(context: Context): CheckIfAlarmSet {
         return CheckIfAlarmSet(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateTodo(repository: TodoRepository): UpdateTodo {
+        return UpdateTodo(repository)
     }
 }

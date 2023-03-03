@@ -21,6 +21,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
 
+        TodoListApp.component?.inject(this)
+
         val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
 
         todo?.id?.let { id ->

@@ -6,19 +6,18 @@ import com.example.todolistapp.feature_todo_list.data.local.TodoDao
 import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodo
 import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodoEntity
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.repository.TodoReposiroty
+import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.Callable
 
 private const val TAG = "TodoRepositoryImpl"
 
 @SuppressLint("CheckResult")
 class TodoRepositoryImpl(
     private val todoDao: TodoDao
-): TodoReposiroty {
+): TodoRepository {
 
     override fun insertTodo(todo: Todo) {
         Observable.fromCallable {

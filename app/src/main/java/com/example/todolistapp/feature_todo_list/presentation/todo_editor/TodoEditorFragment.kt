@@ -100,6 +100,10 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
                 viewModel.onSaveClick()
                 navigateBack() // todo call from presenter uiEffect
             }
+
+            fabTest.setOnClickListener {
+                viewModel.check()
+            }
         }
     }
 

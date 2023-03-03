@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.repository.TodoReposiroty
-import com.example.todolistapp.feature_todo_list.presentation.util.Event
+import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
+import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -15,7 +15,8 @@ import javax.inject.Inject
 private const val TAG = "TodoListViewModel"
 
 class TodoListViewModel @Inject constructor(
-    private val reposiroty: TodoReposiroty //todo useCase/interactor
+    private val reposiroty: TodoRepository, //todo useCase/interactor
+    private val updateTodo: UpdateTodo
 ) : ViewModel() {
 
     private val compDisp = CompositeDisposable()
@@ -44,7 +45,7 @@ class TodoListViewModel @Inject constructor(
     }
 
     fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
-        reposiroty.updateTodo(todo.copy(isCompleted = completed).toTodo())
+        updateTodo.invoke(todo.copy(isCompleted = completed).toTodo())
     }
 
     fun onShowCompletedChanged(show: Boolean) {

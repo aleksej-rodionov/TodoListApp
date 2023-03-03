@@ -3,6 +3,8 @@ package com.example.todolistapp.feature_todo_list.di
 import android.app.Application
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
+import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmNotificationReceiver
+import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmReceiver
 import com.example.todolistapp.feature_todo_list.presentation.todo_editor.TodoEditorFragment
 import com.example.todolistapp.feature_todo_list.presentation.todo_list.TodoListFragment
 import dagger.BindsInstance
@@ -22,6 +24,8 @@ interface SingletonComponent {
     fun inject(activity: MainActivity)
     fun inject(fragment: TodoListFragment)
     fun inject(fragment: TodoEditorFragment)
+    fun inject(receiver: AlarmReceiver)
+    fun inject(receiver: AlarmNotificationReceiver)
 
     @Component.Builder
     interface Builder {
