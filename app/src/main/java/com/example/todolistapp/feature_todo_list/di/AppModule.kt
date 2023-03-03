@@ -1,6 +1,7 @@
 package com.example.todolistapp.feature_todo_list.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.todolistapp.feature_todo_list.data.local.TodoDatabase
 import com.example.todolistapp.feature_todo_list.data.repository.TodoRepositoryImpl
@@ -11,6 +12,10 @@ import javax.inject.Singleton
 
 @Module
 class AppModule {
+
+    @Provides
+    @Singleton
+    fun provideAppContext(app: Application): Context = app.applicationContext
 
     @Provides
     @Singleton
