@@ -14,13 +14,14 @@ import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmReceiver
 import javax.inject.Inject
 
-class SetAlarm @Inject constructor(
+class SetAlarm(
     private val context: Context
 ) {
 
     operator fun invoke(todo: Todo) {
 
         todo.id?.let { id ->
+            Log.d(TAG_ALARM, "SetAlarm.invoke: CALLED for id = $id")
 
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
@@ -44,7 +45,7 @@ class SetAlarm @Inject constructor(
 
             val clockInfo = AlarmManager.AlarmClockInfo(countAlarmTime(), basicPendingIntent)
             alarmManager.setAlarmClock(clockInfo, pendingIntent)
-        } ?: {
+        } ?: run {
             Log.d(TAG_ALARM, "SetAlarm.invoke: exception")
             throw IllegalArgumentException()
         }

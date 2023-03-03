@@ -78,6 +78,7 @@ class TodoEditorViewModel @Inject constructor(
                 removeAlarm()
                 _isAlarmSet.value = false
             } catch (e: Exception) {
+                Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
                 e.printStackTrace()
             }
         } else {
@@ -85,14 +86,15 @@ class TodoEditorViewModel @Inject constructor(
                 setAlarm()
                 _isAlarmSet.value = true
             } catch (e: Exception) {
+                Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
                 e.printStackTrace()
             }
         }
     }
 
-    fun check() {
+    fun testCheck() {
         val alarmSet = checkIfAlarmSet()
-        Log.d(TAG_ALARM, "check: $alarmSet")
+//        Log.d(TAG_ALARM, "testCheck: $alarmSet")
     }
 
     private fun setAlarm() {
@@ -107,7 +109,7 @@ class TodoEditorViewModel @Inject constructor(
 
     private fun checkIfAlarmSet(): Boolean {
         return todoId?.let {
-            checkIfAlarmSet(it)
+            checkIfAlarmSet.invoke(it)
         } ?: false
     }
 }

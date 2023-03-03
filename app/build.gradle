@@ -74,4 +74,8 @@ dependencies {
     // Moxy
     implementation "com.github.moxy-community:moxy:2.2.2"
     kapt "com.github.moxy-community:moxy-compiler:2.2.2"
+
+    // Permissions
+    implementation "com.github.tbruyelle:rxpermissions:0.12"
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
 }

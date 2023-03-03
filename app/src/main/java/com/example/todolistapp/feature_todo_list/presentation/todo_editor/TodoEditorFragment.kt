@@ -1,11 +1,14 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_editor
 
+import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,9 +18,12 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoEditorBinding
 import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
+import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_PERMISSION
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_todo_editor.*
 import javax.inject.Inject
+import com.tbruyelle.rxpermissions3.RxPermissions
 
 private const val TAG = "TodoEditorFragment"
 
@@ -29,6 +35,32 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
     @Inject
     lateinit var factory: ViewModelFactory
     private val viewModel by viewModels<TodoEditorViewModel> { factory }
+
+    private val rxPermissions by lazy { RxPermissions(requireActivity()) }
+
+//    private val notificationPermisssion =
+//        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+//            when {
+//                granted -> {
+//                    Log.d(TAG_PERMISSION, ": granted!")
+//                    viewModel.onAlarmClick()
+//                }
+//                !shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
+//                    Snackbar.make(
+//                        binding.root,
+//                        "Разрешите уведомления в настройках",
+//                        Snackbar.LENGTH_LONG
+//                    ).show() // todo call from presenter uiEffect
+//                }
+//                else -> {
+//                    Snackbar.make(
+//                        binding.root,
+//                        "Разрешите уведомления в настройках",
+//                        Snackbar.LENGTH_LONG
+//                    ).show() // todo call from presenter uiEffect
+//                }
+//            }
+//        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         TodoListApp.component?.inject(this)
@@ -47,7 +79,6 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         (activity as MainActivity).supportActionBar?.title = if (todo == null) "Новая заметка"
         else "Заметка" //todo resource
 
-        initObservers()
         initListeners()
     }
 
@@ -80,15 +111,32 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
                 true
             }
             R.id.action_reminder -> {
-                viewModel.onAlarmClick()
+//                if(shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
+//                    //todo rationale dialog
+//                    Snackbar.make(
+//                        binding.root,
+//                        "Разрешите уведомления в настройках",
+//                        Snackbar.LENGTH_LONG
+//                    ).show() // todo call from presenter uiEffect
+//                } else {
+//                    notificationPermisssion.launch(Manifest.permission.POST_NOTIFICATIONS)
+//                }
+
+                rxPermissions.request(
+                    POST_NOTIFICATIONS
+                ).subscribe({
+                    if (it) {
+
+                    }
+                }, {
+                    println()
+                })
+
+//                viewModel.onAlarmClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun initObservers() {
-
     }
 
     private fun initListeners() {
@@ -103,7 +151,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
             }
 
             fabTest.setOnClickListener {
-                viewModel.check()
+                viewModel.testCheck()
             }
         }
     }

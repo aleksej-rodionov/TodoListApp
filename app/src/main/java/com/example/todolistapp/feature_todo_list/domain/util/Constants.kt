@@ -7,4 +7,5 @@ object Constants {
     const val DEFAULT_INT = -1
 
     const val TAG_ALARM = "TAG_ALARM"
+    const val TAG_PERMISSION = "TAG_PERMISSION"
 }

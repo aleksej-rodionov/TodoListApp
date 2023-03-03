@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
+import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmReceiver
 
 @SuppressLint("UnspecifiedImmutableFlag")
@@ -15,34 +17,24 @@ class CheckIfAlarmSet(
     operator fun invoke(todoId: Int): Boolean {
 
         val intent = Intent(context, AlarmReceiver::class.java)
-        val isAlarmSet: Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getBroadcast(
-                context,
-                todoId,
-                intent,
+        PendingIntent.getBroadcast(
+            context,
+            todoId,
+            intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
-            )
-            PendingIntent.getBroadcast(
-                context,
-                todoId,
-                intent,
+            } else PendingIntent.FLAG_NO_CREATE
+        )
+        val isAlarmSet = PendingIntent.getBroadcast(
+            context,
+            todoId,
+            intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
-            ) != null
-        } else {
-            PendingIntent.getBroadcast(
-                context,
-                todoId,
-                intent,
-                PendingIntent.FLAG_NO_CREATE
-            )
-            PendingIntent.getBroadcast(
-                context,
-                todoId,
-                intent,
-                PendingIntent.FLAG_NO_CREATE
-            ) != null
-        }
+            } else PendingIntent.FLAG_NO_CREATE
+        ) != null
 
+        Log.d(TAG_ALARM, "CheckIfAlarmSet.invoke: CALLED for id = $todoId, result = $isAlarmSet")
         return isAlarmSet
     }
 }

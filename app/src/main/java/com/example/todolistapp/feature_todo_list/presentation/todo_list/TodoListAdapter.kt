@@ -65,6 +65,7 @@ class TodoListAdapter(
             val checkBox = itemView.findViewById<CheckBox>(R.id.checkBox)
             val textView = itemView.findViewById<TextView>(R.id.textView)
 
+            checkBox.setOnCheckedChangeListener(null)
             checkBox.isChecked = item.isCompleted
             textView.text = item.text
             if (item.isCompleted) {
