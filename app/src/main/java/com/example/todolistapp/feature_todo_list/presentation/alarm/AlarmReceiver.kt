@@ -6,20 +6,18 @@ import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.example.todolistapp.R
+import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.repository.TodoReposiroty
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.DEFAULT_INT
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_ID
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
-import javax.inject.Inject
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    @Inject
-    private lateinit var reposiroty: TodoReposiroty
-
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context, intent: Intent?) {
 
         val todo = intent?.getIntExtra(TODO_MODEL, DEFAULT_INT) as? Todo
 
@@ -44,7 +42,18 @@ class AlarmReceiver : BroadcastReceiver() {
                 FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
             )
 
-            //notifBuilder
+            val notification = NotificationCompat.Builder(context, TodoListApp.ALARM_CHANNEL_ID)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setSmallIcon(R.drawable.ic_baseline_notifications_24)
+                .setContentTitle("Уведомление") //todo resources
+                .setContentText(todo.text.take(20))
+                .setAutoCancel(true)
+                .setContentIntent(mainPendingIntent)
+                .addAction(0, "Выполнено", completePendingIntent) //todo resources
+                .build()
+
+            val notificationManager = NotificationManagerCompat.from(context)
+            notificationManager.notify(id, notification)
         }
     }
 }
