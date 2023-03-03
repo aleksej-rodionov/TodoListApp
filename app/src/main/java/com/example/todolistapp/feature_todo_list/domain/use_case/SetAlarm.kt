@@ -24,6 +24,7 @@ class SetAlarm(
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
             intent.putExtra(TODO_MODEL, todo)
+//            intent.putExtra("pizda", 999)
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 id,

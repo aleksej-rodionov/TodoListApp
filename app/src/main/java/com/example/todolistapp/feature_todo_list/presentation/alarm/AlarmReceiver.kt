@@ -29,7 +29,9 @@ class AlarmReceiver : BroadcastReceiver() {
         TodoListApp.component?.inject(this)
 
         val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
-        Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, todo = $todo")
+//        val pizda = intent?.getIntExtra("pizda", 666)
+        Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, intent = $intent")
+//        Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, pizda = $pizda")
 
         todo?.id?.let { id ->
             Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, id = $id")

@@ -63,10 +63,14 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 //        if (viewModel.todoId == null) {
-//            inflater.inflate(R.menu.menu_add_todo, menu)
+//            inflater.inflate(R.menu.menu_add_todo, menu) //todo remove redundant menu
 //        } else {
         inflater.inflate(R.menu.menu_edit_todo, menu)
 //        }
+
+        if (viewModel.todoId == null) {
+            menu.findItem(R.id.action_delete).setVisible(false)
+        }
 
         viewModel.isAlarmSet.observe(viewLifecycleOwner) {
             menu.findItem(R.id.action_reminder).setIcon(
