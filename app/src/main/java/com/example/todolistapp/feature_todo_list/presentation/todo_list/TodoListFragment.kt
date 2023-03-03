@@ -44,7 +44,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun initRecyclerView() {
         todoListAdapter = TodoListAdapter(
             onTodoClick = {
-                navigateEditTodo(it.toTodo())
+                navigateEditTodo(it.toTodo()) // todo call from presenter uiEffect
             },
             onCompletedClick = { todo, completed ->
                 viewModel.onCompletedChanged(todo, completed)
@@ -70,7 +70,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun initListeners() {
         binding.apply {
             fab.setOnClickListener {
-                navigateAddTodo()
+                navigateAddTodo() // todo call from presenter uiEffect
             }
         }
     }

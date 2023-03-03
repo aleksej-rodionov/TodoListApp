@@ -10,11 +10,11 @@ import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODE
 import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmReceiver
 import javax.inject.Inject
 
-class RemoveAlarm @Inject constructor(
+class RemoveAlarm(
     private val context: Context
 ) {
 
-    fun invoke(todo: Todo) {
+    operator fun invoke(todo: Todo) {
 
         todo.id?.let { id ->
 
@@ -24,6 +24,6 @@ class RemoveAlarm @Inject constructor(
             val pendingIntent =
                 PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE)
             alarmManager.cancel(pendingIntent)
-        }
+        } ?: throw IllegalArgumentException()
     }
 }

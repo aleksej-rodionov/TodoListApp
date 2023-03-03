@@ -53,14 +53,21 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
     override fun onResume() {
         super.onResume()
-        etText.setText(viewModel.todoText.value)
+        etText.setText(viewModel.todoText)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (viewModel.todoId == null) {
-            inflater.inflate(R.menu.menu_add_todo, menu)
-        } else {
-            inflater.inflate(R.menu.menu_edit_todo, menu)
+//        if (viewModel.todoId == null) {
+//            inflater.inflate(R.menu.menu_add_todo, menu)
+//        } else {
+        inflater.inflate(R.menu.menu_edit_todo, menu)
+//        }
+
+        viewModel.isAlarmSet.observe(viewLifecycleOwner) {
+            menu.findItem(R.id.action_reminder).setIcon(
+                if (it) R.drawable.ic_baseline_notifications_24
+                else R.drawable.ic_baseline_notifications_off_24
+            )
         }
     }
 
@@ -68,7 +75,11 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         return when (item.itemId) {
             R.id.action_delete -> {
                 viewModel.deleteTodo()
-                navigateBack()
+                navigateBack() // todo call from presenter uiEffect
+                true
+            }
+            R.id.action_reminder -> {
+                viewModel.onAlarmClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -87,7 +98,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
             fab.setOnClickListener {
                 viewModel.onSaveClick()
-                navigateBack()
+                navigateBack() // todo call from presenter uiEffect
             }
         }
     }

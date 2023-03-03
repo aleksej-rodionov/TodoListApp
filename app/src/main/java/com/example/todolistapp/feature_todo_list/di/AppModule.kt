@@ -6,6 +6,9 @@ import androidx.room.Room
 import com.example.todolistapp.feature_todo_list.data.local.TodoDatabase
 import com.example.todolistapp.feature_todo_list.data.repository.TodoRepositoryImpl
 import com.example.todolistapp.feature_todo_list.domain.repository.TodoReposiroty
+import com.example.todolistapp.feature_todo_list.domain.use_case.CheckIfAlarmSet
+import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
+import com.example.todolistapp.feature_todo_list.domain.use_case.SetAlarm
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -27,5 +30,24 @@ class AppModule {
     @Singleton
     fun provideTodoRepository(db: TodoDatabase): TodoReposiroty {
         return TodoRepositoryImpl(db.dao())
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideSetAlarm(context: Context): SetAlarm {
+        return SetAlarm(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoveAlarm(context: Context): RemoveAlarm {
+        return RemoveAlarm(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckIfAlarmSet(context: Context): CheckIfAlarmSet {
+        return CheckIfAlarmSet(context)
     }
 }

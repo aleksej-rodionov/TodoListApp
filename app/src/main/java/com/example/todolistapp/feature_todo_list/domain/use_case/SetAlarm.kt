@@ -15,7 +15,7 @@ class SetAlarm @Inject constructor(
     private val context: Context
 ) {
 
-    fun invoke(todo: Todo) {
+    operator fun invoke(todo: Todo) {
 
         todo.id?.let { id ->
 
@@ -29,7 +29,7 @@ class SetAlarm @Inject constructor(
 
             val clockInfo = AlarmManager.AlarmClockInfo(countAlarmTime(), basicPendingIntent)
             alarmManager.setAlarmClock(clockInfo, pendingIntent)
-        }
+        } ?: throw IllegalArgumentException()
     }
 
     private fun countAlarmTime(): Long {

@@ -6,20 +6,22 @@ import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.DEFAULT_INT
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
+
+private const val TAG = "AlarmReceiver"
 
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
 
-        val todo = intent?.getIntExtra(TODO_MODEL, DEFAULT_INT) as? Todo
+        val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
 
         todo?.id?.let { id ->
 
@@ -43,7 +45,7 @@ class AlarmReceiver : BroadcastReceiver() {
             )
 
             val notification = NotificationCompat.Builder(context, TodoListApp.ALARM_CHANNEL_ID)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //todo remove?
                 .setSmallIcon(R.drawable.ic_baseline_notifications_24)
                 .setContentTitle("Уведомление") //todo resources
                 .setContentText(todo.text.take(20))
@@ -54,6 +56,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
             val notificationManager = NotificationManagerCompat.from(context)
             notificationManager.notify(id, notification)
+        } ?: run {
+            Log.d(TAG, "onReceive: todo.id is NULL")
         }
     }
 }

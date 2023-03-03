@@ -6,8 +6,7 @@
         android:id="@+id/action_reminder"
         android:icon="@drawable/ic_baseline_notifications_off_24"
         android:title="notification"
-        app:showAsAction="always"
-        android:checkable="true"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_delete"
