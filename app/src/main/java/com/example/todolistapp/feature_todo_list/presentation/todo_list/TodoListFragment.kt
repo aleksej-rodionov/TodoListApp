@@ -44,7 +44,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
     private fun initRecyclerView() {
         todoListAdapter = TodoListAdapter(
             onTodoClick = {
-//                viewModel.onTodoClick(it)
                 navigateEditTodo(it.toTodo())
             },
             onCompletedClick = { todo, completed ->
@@ -66,23 +65,11 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list) {
             Log.d(TAG, "initObservers: list = $it")
             todoListAdapter?.setEntries(it)
         }
-
-//        viewModel.uiEffect.observe(viewLifecycleOwner) {
-//            when (it.peekContent()) {
-//                is TodoListViewModel.UiEffect.OnNavigateAddTodo -> {
-//                   navigateAddTodo()
-//                }
-//                is TodoListViewModel.UiEffect.OnNavigateEditTodo -> {
-//                    navigateEditTodo((it.peekContent() as? TodoListViewModel.UiEffect.OnNavigateEditTodo)?.todo)
-//                }
-//            }
-//        }
     }
 
     private fun initListeners() {
         binding.apply {
             fab.setOnClickListener {
-//                viewModel.onAddTodoClick()
                 navigateAddTodo()
             }
         }

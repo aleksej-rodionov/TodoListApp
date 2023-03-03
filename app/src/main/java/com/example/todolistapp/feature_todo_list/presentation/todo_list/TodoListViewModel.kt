@@ -26,9 +26,6 @@ class TodoListViewModel @Inject constructor(
     private val _todos = MutableLiveData<List<ItemModel>>()
     val todos: LiveData<List<ItemModel>> = _todos
 
-//    private val _uiEffect: MutableLiveData<Event<UiEffect>> = MutableLiveData()
-//    val uiEffect: LiveData<Event<UiEffect>> = _uiEffect
-
     init {
         observeAllTodos()
     }
@@ -49,14 +46,6 @@ class TodoListViewModel @Inject constructor(
     fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
         reposiroty.updateTodo(todo.copy(isCompleted = completed).toTodo())
     }
-
-//    fun onTodoClick(todo: Todo) {
-//        _uiEffect.value = Event(UiEffect.OnNavigateEditTodo(todo))
-//    }
-//
-//    fun onAddTodoClick() {
-//        _uiEffect.value = Event(UiEffect.OnNavigateAddTodo)
-//    }
 
     fun onShowCompletedChanged(show: Boolean) {
         Log.d(TAG, "onShowCompletedChanged: $show")
@@ -94,11 +83,6 @@ class TodoListViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         compDisp.clear()
-    }
-
-    sealed class UiEffect {
-        data class OnNavigateEditTodo(val todo: Todo) : UiEffect()
-        object OnNavigateAddTodo : UiEffect()
     }
 }
 

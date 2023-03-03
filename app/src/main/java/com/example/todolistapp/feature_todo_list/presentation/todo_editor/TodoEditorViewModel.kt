@@ -13,16 +13,13 @@ private const val TAG = "TodoEditorViewModel"
 
 class TodoEditorViewModel @Inject constructor(
     private val reposiroty: TodoReposiroty //todo useCase/interactor
-): ViewModel() {
+) : ViewModel() {
 
     var todoId: Int? = null
     private var todoCompleted: Boolean? = false
 
     private val _todoText: MutableLiveData<String> = MutableLiveData()
     val todoText: LiveData<String> = _todoText
-
-    private val _uiEffect: MutableLiveData<Event<UiEffect>> = MutableLiveData()
-    val uiEffect: LiveData<Event<UiEffect>> = _uiEffect
 
     fun setTodo(todo: Todo?) {
         Log.d(TAG, "setTodo: called")
@@ -50,8 +47,6 @@ class TodoEditorViewModel @Inject constructor(
             )
             reposiroty.updateTodo(updatedTodo)
         }
-
-//        _uiEffect.value = Event(UiEffect.NavigateBack)
     }
 
     fun deleteTodo() {
@@ -61,9 +56,5 @@ class TodoEditorViewModel @Inject constructor(
             id = todoId
         )
         reposiroty.deleteTodo(todo)
-    }
-
-    sealed class UiEffect {
-        object NavigateBack: UiEffect()
     }
 }

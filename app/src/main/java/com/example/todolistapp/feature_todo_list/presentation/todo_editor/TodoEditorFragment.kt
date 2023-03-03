@@ -47,8 +47,6 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         (activity as MainActivity).supportActionBar?.title = if (todo == null) "Новая заметка"
         else "Заметка" //todo resource
 
-
-
         initObservers()
         initListeners()
     }
@@ -73,24 +71,12 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
                 navigateBack()
                 true
             }
-         else ->   super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun initObservers() {
-//        viewModel.todoText.observe(viewLifecycleOwner) {
-//            Log.d(TAG, "initObservers: text = $it")
-//            binding.etText.setText(it)
-//        }
 
-//        viewModel.uiEffect.observe(viewLifecycleOwner) {
-//            when (it.peekContent()) {
-//                is TodoEditorViewModel.UiEffect.NavigateBack -> {
-//                    Log.d(TAG, "initObservers: NavigateBack Effect received")
-//                    navigateBack()
-//                }
-//            }
-//        }
     }
 
     private fun initListeners() {
