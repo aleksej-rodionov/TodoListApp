@@ -23,6 +23,8 @@ class TodoEditorViewModel @Inject constructor(
     private val updateTodo: UpdateTodo
 ) : ViewModel() {
 
+    private var pendingSaveTodoToSetAlarm = false
+
     var todoId: Int? = null
     private var todoCompleted: Boolean = false
     var todoText: String = ""
@@ -52,6 +54,11 @@ class TodoEditorViewModel @Inject constructor(
                 isCompleted = false
             )
             reposiroty.insertTodo(newTodo)
+
+//            if (pendingSaveTodoToSetAlarm) {
+//                val
+//            }
+
         } else {
             val updatedTodo = Todo(
                 text = todoText,
@@ -97,12 +104,14 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     private fun setAlarm() {
-//        Log.d(TAG_ALARM, "setAlarm: CALLED, todo = ${Todo(todoText, todoCompleted, todoId)}")
-        setAlarm.invoke(Todo(todoText, todoCompleted, todoId))
+        todoId?.let {
+            setAlarm.invoke(Todo(todoText, todoCompleted, it))
+        } ?: run {
+            pendingSaveTodoToSetAlarm = true
+        }
     }
 
     private fun removeAlarm() {
-//        Log.d(TAG_ALARM, "removeAlarm: CALLED")
         removeAlarm.invoke(Todo(todoText, todoCompleted, todoId))
     }
 
