@@ -16,14 +16,13 @@ class AlarmNotificationReceiver: BroadcastReceiver() {
     lateinit var updateTodo: UpdateTodo
 
     override fun onReceive(context: Context, intent: Intent?) {
-
         TodoListApp.component?.inject(this)
 
         val todo = intent?.getParcelableExtra(Constants.TODO_MODEL) as? Todo
 
         todo?.id?.let { id ->
 
-            updateTodo.invoke(todo)
+            updateTodo.invoke(todo.copy(isCompleted = true))
             NotificationManagerCompat.from(context).cancel(null, id)
         }
     }

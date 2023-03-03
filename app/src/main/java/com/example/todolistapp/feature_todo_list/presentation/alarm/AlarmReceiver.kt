@@ -12,20 +12,26 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
+import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
+import javax.inject.Inject
 
 private const val TAG = "AlarmReceiver"
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent?) {
+    @Inject
+    lateinit var removeAlarm: RemoveAlarm
 
+    override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
         val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
 
         todo?.id?.let { id ->
+
+            removeAlarm.invoke(todo)
 
             val mainIntent = Intent(context, MainActivity::class.java)
             mainIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP

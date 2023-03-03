@@ -31,7 +31,7 @@ class TodoEditorViewModel @Inject constructor(
     private val _isAlarmSet = MutableLiveData<Boolean>(false)
     val isAlarmSet: LiveData<Boolean> = _isAlarmSet
 
-    init {
+    fun initAlarmState() {
         _isAlarmSet.value = checkIfAlarmSet()
     }
 

@@ -54,6 +54,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
     override fun onResume() {
         super.onResume()
         etText.setText(viewModel.todoText)
+        viewModel.initAlarmState()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
