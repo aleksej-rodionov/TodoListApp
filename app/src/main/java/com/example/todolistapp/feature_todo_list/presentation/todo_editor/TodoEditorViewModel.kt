@@ -11,7 +11,6 @@ import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.use_case.SetAlarm
 import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
-import com.example.todolistapp.feature_todo_list.presentation.todo_list.toTodo
 import javax.inject.Inject
 
 private const val TAG = "TodoEditorViewModel"
@@ -98,12 +97,12 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     private fun setAlarm() {
-        Log.d(TAG, "setAlarm: CALLED")
+//        Log.d(TAG_ALARM, "setAlarm: CALLED, todo = ${Todo(todoText, todoCompleted, todoId)}")
         setAlarm.invoke(Todo(todoText, todoCompleted, todoId))
     }
 
     private fun removeAlarm() {
-        Log.d(TAG, "removeAlarm: CALLED")
+//        Log.d(TAG_ALARM, "removeAlarm: CALLED")
         removeAlarm.invoke(Todo(todoText, todoCompleted, todoId))
     }
 

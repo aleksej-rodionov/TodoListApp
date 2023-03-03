@@ -13,6 +13,7 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
+import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import javax.inject.Inject
@@ -28,8 +29,10 @@ class AlarmReceiver : BroadcastReceiver() {
         TodoListApp.component?.inject(this)
 
         val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
+        Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, todo = $todo")
 
         todo?.id?.let { id ->
+            Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, id = $id")
 
             removeAlarm.invoke(todo)
 
@@ -65,7 +68,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val notificationManager = NotificationManagerCompat.from(context)
             notificationManager.notify(id, notification)
         } ?: run {
-            Log.d(TAG, "onReceive: todo.id is NULL")
+            Log.d(TAG_ALARM, "AlarmReceiver.onReceive: todo.id is NULL")
         }
     }
 }

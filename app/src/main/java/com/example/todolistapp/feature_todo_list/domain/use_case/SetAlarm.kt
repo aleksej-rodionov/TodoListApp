@@ -8,11 +8,9 @@ import android.os.Build
 import android.util.Log
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_ID
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmReceiver
-import javax.inject.Inject
 
 class SetAlarm(
     private val context: Context
