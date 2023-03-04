@@ -53,11 +53,12 @@ class TodoEditorViewModel @Inject constructor(
                 text = todoText,
                 isCompleted = false
             )
-            reposiroty.insertTodo(newTodo)
+            val id = reposiroty.insertTodo(newTodo)
+            Log.d("TAG_PENDING", "onSaveClick: id = $id")
 
-//            if (pendingSaveTodoToSetAlarm) {
-//                val
-//            }
+            if (pendingSaveTodoToSetAlarm) {
+//                val newTodo =
+            }
 
         } else {
             val updatedTodo = Todo(

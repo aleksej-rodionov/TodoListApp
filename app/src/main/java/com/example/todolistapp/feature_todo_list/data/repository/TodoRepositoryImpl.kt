@@ -10,6 +10,7 @@ import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepositor
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 private const val TAG = "TodoRepositoryImpl"
@@ -19,17 +20,21 @@ class TodoRepositoryImpl(
     private val todoDao: TodoDao
 ): TodoRepository {
 
-    override fun insertTodo(todo: Todo) {
+    override fun insertTodo(todo: Todo): Long {
+        var id: Long = -1L
         Observable.fromCallable {
-            Runnable {
-                todoDao.insertTodo(todo.toTodoEntity())
-            }.run()
+//            Runnable {
+               id = todoDao.insertTodo(todo.toTodoEntity())
+            Log.d("TAG_PENDING", "insertTodo: id = $id")
+//            }.run()
         }.subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Log.d(TAG, "insertTodo: success")
             }, {
                 Log.d(TAG, "insertTodo: error = ${it.message}")
             })
+        return id
     }
 
     override fun updateTodo(todo: Todo) {
