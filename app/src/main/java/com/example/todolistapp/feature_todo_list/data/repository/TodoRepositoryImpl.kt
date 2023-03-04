@@ -20,21 +20,9 @@ class TodoRepositoryImpl(
     private val todoDao: TodoDao
 ): TodoRepository {
 
-    override fun insertTodo(todo: Todo): Long {
-        var id: Long = -1L
-        Observable.fromCallable {
-//            Runnable {
-               id = todoDao.insertTodo(todo.toTodoEntity())
-            Log.d("TAG_PENDING", "insertTodo: id = $id")
-//            }.run()
-        }.subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.d(TAG, "insertTodo: success")
-            }, {
-                Log.d(TAG, "insertTodo: error = ${it.message}")
-            })
-        return id
+    override fun insertTodo(todo: Todo): Single<Long> {
+        return todoDao.insertTodo(todo.toTodoEntity())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun updateTodo(todo: Todo) {
@@ -66,7 +54,7 @@ class TodoRepositoryImpl(
     override fun getTodoById(id: Int): Single<Todo> {
         return todoDao.getTodoById(id).map {
             it.toTodo()
-        }
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun getAllTodos(): Flowable<List<Todo>> {

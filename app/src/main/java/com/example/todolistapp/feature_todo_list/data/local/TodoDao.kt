@@ -9,7 +9,7 @@ import io.reactivex.Single
 interface TodoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTodo(todo: TodoEntity): Long
+    fun insertTodo(todo: TodoEntity): Single<Long>
 
     @Update
     fun updateRodo(todo: TodoEntity)

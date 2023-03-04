@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 interface TodoRepository {
 
-    fun insertTodo(todo: Todo): Long
+    fun insertTodo(todo: Todo): Single<Long>
 
     fun updateTodo(todo: Todo)
 

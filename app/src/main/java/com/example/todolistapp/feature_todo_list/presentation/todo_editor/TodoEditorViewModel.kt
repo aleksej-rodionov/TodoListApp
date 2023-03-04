@@ -11,6 +11,8 @@ import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.use_case.SetAlarm
 import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 private const val TAG = "TodoEditorViewModel"
@@ -23,6 +25,8 @@ class TodoEditorViewModel @Inject constructor(
     private val updateTodo: UpdateTodo
 ) : ViewModel() {
 
+    private val compDisp = CompositeDisposable()
+
     private var pendingSaveTodoToSetAlarm = false
 
     var todoId: Int? = null
@@ -31,6 +35,9 @@ class TodoEditorViewModel @Inject constructor(
 
     private val _isAlarmSet = MutableLiveData<Boolean>(false)
     val isAlarmSet: LiveData<Boolean> = _isAlarmSet
+
+    private val _pendingNavigateUp = MutableLiveData<Boolean>(false)
+    val pendingNavigateUp: LiveData<Boolean> = _pendingNavigateUp
 
     fun initAlarmState() {
         _isAlarmSet.value = checkIfAlarmSet()
@@ -53,13 +60,19 @@ class TodoEditorViewModel @Inject constructor(
                 text = todoText,
                 isCompleted = false
             )
-            val id = reposiroty.insertTodo(newTodo)
-            Log.d("TAG_PENDING", "onSaveClick: id = $id")
-
-            if (pendingSaveTodoToSetAlarm) {
-//                val newTodo =
-            }
-
+            reposiroty.insertTodo(newTodo)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (pendingSaveTodoToSetAlarm) {
+                        //todo get todo by id and setAlarm(todo)
+                        val id = it.toInt()
+                        fetchNewTodoAndSetAlarmForIt(id)
+                    } else {
+                        _pendingNavigateUp.value = true
+                    }
+                }, {
+                    it.printStackTrace()
+                }).apply { compDisp.add(this) }
         } else {
             val updatedTodo = Todo(
                 text = todoText,
@@ -77,6 +90,7 @@ class TodoEditorViewModel @Inject constructor(
             id = todoId
         )
         reposiroty.deleteTodo(todo)
+        _pendingNavigateUp.value = true
     }
 
     fun onAlarmClick() {
@@ -104,6 +118,17 @@ class TodoEditorViewModel @Inject constructor(
 //        Log.d(TAG_ALARM, "testCheck: $alarmSet")
     }
 
+    private fun fetchNewTodoAndSetAlarmForIt(id: Int) {
+        reposiroty.getTodoById(id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                setAlarm(it)
+                _pendingNavigateUp.value = true
+            }, {
+                it.printStackTrace()
+            }).apply { compDisp.add(this) }
+    }
+
     private fun setAlarm() {
         todoId?.let {
             setAlarm.invoke(Todo(todoText, todoCompleted, it))
@@ -120,5 +145,10 @@ class TodoEditorViewModel @Inject constructor(
         return todoId?.let {
             checkIfAlarmSet.invoke(it)
         } ?: false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compDisp.clear()
     }
 }

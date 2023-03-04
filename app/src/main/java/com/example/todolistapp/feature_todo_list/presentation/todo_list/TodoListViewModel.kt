@@ -41,6 +41,7 @@ class TodoListViewModel @Inject constructor(
                 _todos.value = mapEntriesByShowCompleted(todoItems)
             }, {
                 Log.d("TAG_TODO_LIST", "observeAllTodos: error = ${it.message}")
+                it.printStackTrace()
             }).apply { compDisp.add(this) }
     }
 

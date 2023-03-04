@@ -52,6 +52,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         (activity as MainActivity).supportActionBar?.title = if (todo == null) "Новая заметка"
         else "Заметка" //todo resource
 
+        initObservers()
         initListeners()
     }
 
@@ -84,7 +85,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         return when (item.itemId) {
             R.id.action_delete -> {
                 viewModel.deleteTodo()
-                navigateBack() // todo call from presenter uiEffect
+//                navigateBack() // todo call from presenter uiEffect
                 true
             }
             R.id.action_reminder -> {
@@ -108,6 +109,12 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         }
     }
 
+    private fun initObservers() {
+        viewModel.pendingNavigateUp.observe(viewLifecycleOwner) {
+            if (it) navigateBack()
+        }
+    }
+
     private fun initListeners() {
         binding.apply {
             etText.addTextChangedListener {
@@ -116,7 +123,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
             fab.setOnClickListener {
                 viewModel.onSaveClick()
-                navigateBack() // todo call from presenter uiEffect
+//                navigateBack() // todo call from presenter uiEffect
             }
 
             fabTest.setOnClickListener {
