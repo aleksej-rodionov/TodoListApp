@@ -64,7 +64,6 @@ class TodoEditorViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (pendingSaveTodoToSetAlarm) {
-                        //todo get todo by id and setAlarm(todo)
                         val id = it.toInt()
                         fetchNewTodoAndSetAlarmForIt(id)
                     } else {

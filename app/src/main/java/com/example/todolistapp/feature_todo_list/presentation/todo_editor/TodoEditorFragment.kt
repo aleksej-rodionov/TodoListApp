@@ -1,8 +1,6 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_editor
 
-import android.Manifest.permission.POST_NOTIFICATIONS
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,9 +14,7 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoEditorBinding
 import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_PERMISSION
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
-import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.fragment_todo_editor.*
 import javax.inject.Inject
 
@@ -32,8 +28,6 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
     @Inject
     lateinit var factory: ViewModelFactory
     private val viewModel by viewModels<TodoEditorViewModel> { factory }
-
-    private val rxPermissions by lazy { RxPermissions(requireActivity()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         TodoListApp.component?.inject(this)
@@ -63,11 +57,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        if (viewModel.todoId == null) {
-//            inflater.inflate(R.menu.menu_add_todo, menu) //todo remove redundant menu
-//        } else {
         inflater.inflate(R.menu.menu_edit_todo, menu)
-//        }
 
         if (viewModel.todoId == null) {
             menu.findItem(R.id.action_delete).setVisible(false)
@@ -85,24 +75,10 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
         return when (item.itemId) {
             R.id.action_delete -> {
                 viewModel.deleteTodo()
-//                navigateBack() // todo call from presenter uiEffect
                 true
             }
             R.id.action_reminder -> {
-
-                rxPermissions.request(
-                    POST_NOTIFICATIONS
-                ).subscribe({
-                    if (it) {
-                        Log.d(TAG_PERMISSION, "onOptionsItemSelected: granted")
-                        viewModel.onAlarmClick()
-                    }
-                }, {
-                    Log.d(TAG_PERMISSION, "onOptionsItemSelected: error = ${it.message}")
-                    it.printStackTrace()
-                })
-
-//                viewModel.onAlarmClick()
+                viewModel.onAlarmClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -123,12 +99,11 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
             fab.setOnClickListener {
                 viewModel.onSaveClick()
-//                navigateBack() // todo call from presenter uiEffect
             }
 
-            fabTest.setOnClickListener {
-                viewModel.testCheck()
-            }
+//            fabTest.setOnClickListener {
+//                viewModel.testCheck()
+//            }
         }
     }
 
