@@ -86,7 +86,7 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
     }
 
     private fun initObservers() {
-        viewModel.pendingNavigateUp.observe(viewLifecycleOwner) {
+        viewModel.pendingNavigateUp.observe(viewLifecycleOwner) { //todo presenter uiEffect
             if (it) navigateBack()
         }
     }

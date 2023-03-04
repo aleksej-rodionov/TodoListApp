@@ -24,10 +24,6 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
     private var _binding: FragmentTodoListBinding? = null
     private val binding get() = _binding!!
 
-//    @Inject
-//    lateinit var factory: ViewModelFactory
-//    private val viewModel by viewModels<TodoListViewModel> { factory }
-
     @Inject
     @InjectPresenter
     lateinit var presenter: TodoListPresenter
@@ -47,7 +43,6 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
         _binding = FragmentTodoListBinding.bind(view)
 
         initRecyclerView()
-//        initObservers()
         initListeners()
     }
 
@@ -70,15 +65,12 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
     private fun initRecyclerView() {
         todoListAdapter = TodoListAdapter(
             onTodoClick = {
-//                navigateEditTodo(it.toTodo()) // todo call from presenter uiEffect
                 presenter.onEditTodoClick(it.toTodo())
             },
             onCompletedClick = { todo, completed ->
-//                viewModel.onCompletedChanged(todo, completed)
                 presenter.onCompletedChanged(todo, completed)
             },
             onShowCompletedChanged = {
-//                viewModel.onShowCompletedChanged(it)
                 presenter.onShowCompletedChanged(it)
             }
         )
@@ -89,17 +81,9 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
         }
     }
 
-//    private fun initObservers() {
-//        viewModel.todos.observe(viewLifecycleOwner) {
-//            Log.d(TAG, "initObservers: list = $it")
-//            todoListAdapter?.setEntries(it)
-//        }
-//    }
-
     private fun initListeners() {
         binding.apply {
             fab.setOnClickListener {
-//                navigateAddTodo() // todo call from presenter uiEffect
                 presenter.onAddTodoClick()
             }
         }
