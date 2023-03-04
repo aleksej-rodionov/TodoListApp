@@ -13,9 +13,11 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
+import com.example.todolistapp.feature_todo_list.domain.util.Constants
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
+import com.google.gson.Gson
 import javax.inject.Inject
 
 private const val TAG = "AlarmReceiver"
@@ -28,10 +30,10 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
-        val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
-//        val pizda = intent?.getIntExtra("pizda", 666)
+//        val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
+        val todoString = intent?.getStringExtra(Constants.TODO_MODEL)
+        val todo = Gson().fromJson(todoString, Todo::class.java)
         Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, intent = $intent")
-//        Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, pizda = $pizda")
 
         todo?.id?.let { id ->
             Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, id = $id")
@@ -48,7 +50,9 @@ class AlarmReceiver : BroadcastReceiver() {
             )
 
             val completeIntent = Intent(context, AlarmNotificationReceiver::class.java).apply {
-                putExtra(TODO_MODEL, todo)
+//                putExtra(TODO_MODEL, todo)
+                val todoString = Gson().toJson(todo)
+                putExtra(TODO_MODEL, todoString)
             }
             val completePendingIntent = PendingIntent.getBroadcast(
                 context,

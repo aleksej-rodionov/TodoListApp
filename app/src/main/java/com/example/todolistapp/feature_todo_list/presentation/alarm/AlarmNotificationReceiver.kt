@@ -8,6 +8,7 @@ import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
+import com.google.gson.Gson
 import javax.inject.Inject
 
 class AlarmNotificationReceiver: BroadcastReceiver() {
@@ -18,7 +19,9 @@ class AlarmNotificationReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
-        val todo = intent?.getParcelableExtra(Constants.TODO_MODEL) as? Todo
+//        val todo = intent?.getParcelableExtra(Constants.TODO_MODEL) as? Todo
+        val todoString = intent?.getStringExtra(Constants.TODO_MODEL)
+        val todo = Gson().fromJson(todoString, Todo::class.java)
 
         todo?.id?.let { id ->
 

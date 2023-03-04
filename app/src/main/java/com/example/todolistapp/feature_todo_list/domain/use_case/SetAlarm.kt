@@ -11,6 +11,7 @@ import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import com.example.todolistapp.feature_todo_list.presentation.alarm.AlarmReceiver
+import com.google.gson.Gson
 
 class SetAlarm(
     private val context: Context
@@ -23,8 +24,10 @@ class SetAlarm(
 
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
-            intent.putExtra(TODO_MODEL, todo)
-//            intent.putExtra("pizda", 999)
+//            intent.putExtra(TODO_MODEL, todo)
+            val todoString = Gson().toJson(todo)
+            intent.putExtra(TODO_MODEL, todoString)
+
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 id,
