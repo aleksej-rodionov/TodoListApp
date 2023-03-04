@@ -71,9 +71,10 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.8"
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
-    // Moxy
+    //Moxy
     implementation "com.github.moxy-community:moxy:2.2.2"
     kapt "com.github.moxy-community:moxy-compiler:2.2.2"
+    implementation "com.github.moxy-community:moxy-androidx:2.2.2"
 
     //GSON
     implementation 'com.google.code.gson:gson:2.8.6'
