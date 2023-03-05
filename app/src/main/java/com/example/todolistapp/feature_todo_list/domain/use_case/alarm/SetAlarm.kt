@@ -20,11 +20,8 @@ class SetAlarm(
     operator fun invoke(todo: Todo) {
 
         todo.id?.let { id ->
-            Log.d(TAG_ALARM, "SetAlarm.invoke: CALLED for id = $id")
-
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
-//            intent.putExtra(TODO_MODEL, todo)
             val todoString = Gson().toJson(todo)
             intent.putExtra(TODO_MODEL, todoString)
 
@@ -54,6 +51,6 @@ class SetAlarm(
     }
 
     private fun countAlarmTime(): Long {
-        return System.currentTimeMillis() + 10000 //todo change to 600000
+        return System.currentTimeMillis() + 600000
     }
 }
