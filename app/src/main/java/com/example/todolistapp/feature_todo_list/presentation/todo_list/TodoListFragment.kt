@@ -1,16 +1,12 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoListBinding
-import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter

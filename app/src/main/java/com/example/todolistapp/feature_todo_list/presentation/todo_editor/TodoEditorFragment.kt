@@ -6,14 +6,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoEditorBinding
-import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import kotlinx.android.synthetic.main.fragment_todo_editor.*
 import moxy.MvpAppCompatFragment
