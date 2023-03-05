@@ -1,4 +1,4 @@
-package com.example.todolistapp.feature_todo_list.domain.use_case
+package com.example.todolistapp.feature_todo_list.domain.use_case.alarm
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent

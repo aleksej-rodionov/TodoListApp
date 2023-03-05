@@ -15,7 +15,8 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AppModule::class,
-        UseCaseModule::class,
+        AlarmUseCaseModule::class,
+        TodoUseCaseModule::class,
         PresenterModule::class
     ]
 )

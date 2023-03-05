@@ -6,7 +6,7 @@ import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.UpdateTodo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
 import com.google.gson.Gson
 import javax.inject.Inject

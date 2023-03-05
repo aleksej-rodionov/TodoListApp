@@ -3,7 +3,9 @@ package com.example.todolistapp.feature_todo_list.presentation.todo_list
 import android.util.Log
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
-import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.UpdateTodo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -18,8 +20,8 @@ private const val TAG = "TodoListPresenter"
 
 @InjectViewState
 class TodoListPresenter(
-    private val reposiroty: TodoRepository, //todo useCase/interactor
-    private val updateTodo: UpdateTodo
+    private val alarmUseCases: AlarmUseCases,
+    private val todoUseCases: TodoUseCases
 ): MvpPresenter<TodoListView>() {
 
     private var compDisp: CompositeDisposable? = null
@@ -32,7 +34,7 @@ class TodoListPresenter(
     }
 
     private fun observeAllTodos() {
-        val output = reposiroty.getAllTodos()
+        val output = todoUseCases.getAllTodos.invoke()
         output.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -46,7 +48,7 @@ class TodoListPresenter(
     }
 
     fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
-        updateTodo.invoke(todo.copy(isCompleted = completed).toTodo())
+        todoUseCases.updateTodo.invoke(todo.copy(isCompleted = completed).toTodo())
     }
 
     fun onShowCompletedChanged(show: Boolean) {

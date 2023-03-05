@@ -1,15 +1,14 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_editor
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
-import com.example.todolistapp.feature_todo_list.domain.use_case.CheckIfAlarmSet
-import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
-import com.example.todolistapp.feature_todo_list.domain.use_case.SetAlarm
-import com.example.todolistapp.feature_todo_list.domain.use_case.UpdateTodo
-import com.example.todolistapp.feature_todo_list.domain.util.Constants
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.CheckIfAlarmSet
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.RemoveAlarm
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.SetAlarm
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.UpdateTodo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,11 +23,8 @@ private const val TAG = "TodoEditorPresenter"
 
 @InjectViewState
 class TodoEditorPresenter(
-    private val reposiroty: TodoRepository, //todo useCase/interactor
-    private val setAlarm: SetAlarm,
-    private val removeAlarm: RemoveAlarm,
-    private val checkIfAlarmSet: CheckIfAlarmSet,
-    private val updateTodo: UpdateTodo
+    private val alarmUseCases: AlarmUseCases,
+    private val todoUseCases: TodoUseCases
 ): MvpPresenter<TodoEditorView>() {
 
     private var compDisp: CompositeDisposable? = null
@@ -60,7 +56,7 @@ class TodoEditorPresenter(
                 text = todoText,
                 isCompleted = false
             )
-            reposiroty.insertTodo(newTodo)
+            todoUseCases.insertTodo.invoke(newTodo)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (pendingSaveTodoToSetAlarm) {
@@ -78,7 +74,7 @@ class TodoEditorPresenter(
                 isCompleted = todoCompleted,
                 id = todoId
             )
-            updateTodo.invoke(updatedTodo)
+            todoUseCases.updateTodo.invoke(updatedTodo)
         }
     }
 
@@ -88,7 +84,7 @@ class TodoEditorPresenter(
             isCompleted = todoCompleted,
             id = todoId
         )
-        reposiroty.deleteTodo(todo)
+        todoUseCases.deleteTodo.invoke(todo)
         viewState.navigateUp()
     }
 
@@ -118,10 +114,10 @@ class TodoEditorPresenter(
     }
 
     private fun fetchNewTodoAndSetAlarmForIt(id: Int) {
-        reposiroty.getTodoById(id)
+        todoUseCases.getTodoById.invoke(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                setAlarm(it)
+                alarmUseCases.setAlarm.invoke(it)
                 viewState.navigateUp()
             }, {
                 it.printStackTrace()
@@ -130,19 +126,19 @@ class TodoEditorPresenter(
 
     private fun setAlarm() {
         todoId?.let {
-            setAlarm.invoke(Todo(todoText, todoCompleted, it))
+            alarmUseCases.setAlarm.invoke(Todo(todoText, todoCompleted, it))
         } ?: run {
             pendingSaveTodoToSetAlarm = true
         }
     }
 
     private fun removeAlarm() {
-        removeAlarm.invoke(Todo(todoText, todoCompleted, todoId))
+        alarmUseCases.removeAlarm.invoke(Todo(todoText, todoCompleted, todoId))
     }
 
     private fun checkIfAlarmSet(): Boolean {
         return todoId?.let {
-            checkIfAlarmSet.invoke(it)
+            alarmUseCases.checkIfAlarmSet.invoke(it)
         } ?: false
     }
 

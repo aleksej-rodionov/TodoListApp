@@ -12,7 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.use_case.RemoveAlarm
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
