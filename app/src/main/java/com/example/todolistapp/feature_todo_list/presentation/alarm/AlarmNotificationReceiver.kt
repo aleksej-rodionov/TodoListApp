@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.todo.UpdateTodo
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
 import com.google.gson.Gson
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class AlarmNotificationReceiver: BroadcastReceiver() {
 
     @Inject
-    lateinit var updateTodo: UpdateTodo
+    lateinit var todoUseCases: TodoUseCases
 
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
@@ -25,7 +26,7 @@ class AlarmNotificationReceiver: BroadcastReceiver() {
 
         todo?.id?.let { id ->
 
-            updateTodo.invoke(todo.copy(isCompleted = true))
+            todoUseCases.updateTodo.invoke(todo.copy(isCompleted = true))
             NotificationManagerCompat.from(context).cancel(null, id)
         }
     }

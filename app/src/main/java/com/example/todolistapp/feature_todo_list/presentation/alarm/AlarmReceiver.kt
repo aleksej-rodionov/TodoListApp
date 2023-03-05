@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
+import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
@@ -25,7 +26,7 @@ private const val TAG = "AlarmReceiver"
 class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var removeAlarm: RemoveAlarm
+    lateinit var alarmUseCases: AlarmUseCases
 
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
@@ -38,7 +39,7 @@ class AlarmReceiver : BroadcastReceiver() {
         todo?.id?.let { id ->
             Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, id = $id")
 
-            removeAlarm.invoke(todo)
+            alarmUseCases.removeAlarm.invoke(todo)
 
             val mainIntent = Intent(context, MainActivity::class.java)
             mainIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
