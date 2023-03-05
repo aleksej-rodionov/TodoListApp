@@ -48,8 +48,8 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
         val args by navArgs<TodoEditorFragmentArgs>()
         val todo = args.todo
         presenter.setTodo(todo)
-        (activity as MainActivity).supportActionBar?.title = if (todo == null) "Новая заметка"
-        else "Заметка" //todo resource
+        (activity as MainActivity).supportActionBar?.title = if (todo == null) requireContext().getString(R.string.new_todo)
+        else requireContext().getString(R.string.todo)
 
         initListeners()
     }

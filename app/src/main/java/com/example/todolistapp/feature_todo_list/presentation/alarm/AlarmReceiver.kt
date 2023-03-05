@@ -13,7 +13,6 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
-import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.RemoveAlarm
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
@@ -31,14 +30,10 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
-//        val todo = intent?.getParcelableExtra(TODO_MODEL) as? Todo
         val todoString = intent?.getStringExtra(Constants.TODO_MODEL)
         val todo = Gson().fromJson(todoString, Todo::class.java)
-        Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, intent = $intent")
 
         todo?.id?.let { id ->
-            Log.d(TAG_ALARM, "AlarmReceiver.onReceive: CALLED, id = $id")
-
             alarmUseCases.removeAlarm.invoke(todo)
 
             val mainIntent = Intent(context, MainActivity::class.java)
@@ -51,9 +46,8 @@ class AlarmReceiver : BroadcastReceiver() {
             )
 
             val completeIntent = Intent(context, AlarmNotificationReceiver::class.java).apply {
-//                putExtra(TODO_MODEL, todo)
-                val todoString = Gson().toJson(todo)
-                putExtra(TODO_MODEL, todoString)
+                val todoJson = Gson().toJson(todo)
+                putExtra(TODO_MODEL, todoJson)
             }
             val completePendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -65,11 +59,11 @@ class AlarmReceiver : BroadcastReceiver() {
             val notification = NotificationCompat.Builder(context, TodoListApp.ALARM_CHANNEL_ID)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //todo remove?
                 .setSmallIcon(R.drawable.ic_baseline_notifications_24)
-                .setContentTitle("Уведомление") //todo resources
+                .setContentTitle(context.getString(R.string.notification))
                 .setContentText(todo.text.take(20))
                 .setAutoCancel(true)
                 .setContentIntent(mainPendingIntent)
-                .addAction(0, "Выполнено", completePendingIntent) //todo resources
+                .addAction(0, context.getString(R.string.completed), completePendingIntent)
                 .build()
 
             val notificationManager = NotificationManagerCompat.from(context)

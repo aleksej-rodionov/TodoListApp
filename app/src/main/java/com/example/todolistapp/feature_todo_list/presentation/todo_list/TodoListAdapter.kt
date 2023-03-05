@@ -86,10 +86,10 @@ class TodoListAdapter(
 
             if (item.isCompletedDisplayed) {
                 arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
-                dividerText.text = "Скрыть выполненные"
+                dividerText.text = itemView.resources.getString(R.string.hide_completed)
             } else {
                 arrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
-                dividerText.text = "Отобразить выполненные" //todo replace with resources
+                dividerText.text = itemView.resources.getString(R.string.show_completed)
             }
 
             itemView.rootView.setOnClickListener {
