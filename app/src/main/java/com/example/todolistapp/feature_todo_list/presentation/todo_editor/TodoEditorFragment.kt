@@ -16,18 +16,26 @@ import com.example.todolistapp.databinding.FragmentTodoEditorBinding
 import com.example.todolistapp.feature_todo_list.di.ViewModelFactory
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import kotlinx.android.synthetic.main.fragment_todo_editor.*
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
 
 private const val TAG = "TodoEditorFragment"
 
-class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
+class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), TodoEditorView {
 
     private var _binding: FragmentTodoEditorBinding? = null
     private val binding get() = _binding!!
 
+    private var menu: Menu? = null
+
     @Inject
-    lateinit var factory: ViewModelFactory
-    private val viewModel by viewModels<TodoEditorViewModel> { factory }
+    @InjectPresenter
+    lateinit var presenter: TodoEditorPresenter
+
+    @ProvidePresenter
+    fun provideTodoEditorPresenter(): TodoEditorPresenter = presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         TodoListApp.component?.inject(this)
@@ -42,74 +50,68 @@ class TodoEditorFragment : Fragment(R.layout.fragment_todo_editor) {
 
         val args by navArgs<TodoEditorFragmentArgs>()
         val todo = args.todo
-        viewModel.setTodo(todo)
+        presenter.setTodo(todo)
         (activity as MainActivity).supportActionBar?.title = if (todo == null) "Новая заметка"
         else "Заметка" //todo resource
 
-        initObservers()
         initListeners()
     }
 
     override fun onResume() {
         super.onResume()
-        etText.setText(viewModel.todoText)
-        viewModel.initAlarmState()
+        etText.setText(presenter.todoText)
+        presenter.initAlarmState()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_edit_todo, menu)
 
-        if (viewModel.todoId == null) {
+        this.menu = menu
+        if (presenter.todoId == null) {
             menu.findItem(R.id.action_delete).setVisible(false)
-        }
-
-        viewModel.isAlarmSet.observe(viewLifecycleOwner) {
-            menu.findItem(R.id.action_reminder).setIcon(
-                if (it) R.drawable.ic_baseline_notifications_24
-                else R.drawable.ic_baseline_notifications_off_24
-            )
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_delete -> {
-                viewModel.deleteTodo()
+                presenter.deleteTodo()
                 true
             }
             R.id.action_reminder -> {
-                viewModel.onAlarmClick()
+                presenter.onAlarmClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun initObservers() {
-        viewModel.pendingNavigateUp.observe(viewLifecycleOwner) { //todo presenter uiEffect
-            if (it) navigateBack()
-        }
+    override fun showIsAlarmSet(set: Boolean) {
+        menu?.findItem(R.id.action_reminder)?.setIcon(
+            if (set) R.drawable.ic_baseline_notifications_24
+            else R.drawable.ic_baseline_notifications_off_24
+        )
+    }
+
+    override fun navigateUp() {
+        binding.etText.clearFocus()
+        findNavController().popBackStack()
     }
 
     private fun initListeners() {
         binding.apply {
             etText.addTextChangedListener {
-                viewModel.updateText(it.toString())
+                presenter.updateText(it.toString())
             }
 
             fab.setOnClickListener {
-                viewModel.onSaveClick()
+                presenter.onSaveClick()
             }
 
-//            fabTest.setOnClickListener {
-//                viewModel.testCheck()
-//            }
+            fabTest.setOnClickListener {
+                presenter.testCheck()
+            }
         }
-    }
-
-    private fun navigateBack() {
-        binding.etText.clearFocus()
-        findNavController().popBackStack()
     }
 
     override fun onDestroyView() {
