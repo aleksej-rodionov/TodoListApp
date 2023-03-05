@@ -89,21 +89,27 @@ class TodoEditorPresenter(
     }
 
     fun onAlarmClick() {
-        if (checkIfAlarmSet()) {
-            try {
-                removeAlarm()
-                viewState.showIsAlarmSet(false)
-            } catch (e: Exception) {
-                Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
-                e.printStackTrace()
-            }
+
+        if (todoId == null) {
+            pendingSaveTodoToSetAlarm = !pendingSaveTodoToSetAlarm
+            viewState.showIsAlarmSet(pendingSaveTodoToSetAlarm)
         } else {
-            try {
-                setAlarm()
-                viewState.showIsAlarmSet(true)
-            } catch (e: Exception) {
-                Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
-                e.printStackTrace()
+            if (checkIfAlarmSet()) {
+                try {
+                    removeAlarm()
+                    viewState.showIsAlarmSet(false)
+                } catch (e: Exception) {
+                    Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
+                    e.printStackTrace()
+                }
+            } else {
+                try {
+                    setAlarm()
+                    viewState.showIsAlarmSet(true)
+                } catch (e: Exception) {
+                    Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
+                    e.printStackTrace()
+                }
             }
         }
     }
