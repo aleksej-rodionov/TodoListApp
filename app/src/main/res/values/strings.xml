@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">TodoListApp</string>
 
-    <string name="notification">Уведомление</string>
-    <string name="completed">Выполнено</string>
+    <string name="reminder">Напоминание</string>
+    <string name="completed">Завершить</string>
     <string name="todo">Заметка</string>
     <string name="new_todo">Новая заметка</string>
     <string name="hide_completed">Скрыть выполненные</string>

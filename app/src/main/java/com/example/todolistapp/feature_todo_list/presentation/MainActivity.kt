@@ -1,25 +1,14 @@
 package com.example.todolistapp.feature_todo_list.presentation
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.todolistapp.NavGraphDirections
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.ActivityMainBinding
-import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.ACTION_SHOW_DIALOG
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_DIALOG
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
-import com.example.todolistapp.feature_todo_list.presentation.todo_list.TodoListFragment
-import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 

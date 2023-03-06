@@ -13,8 +13,7 @@ import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
-import com.example.todolistapp.feature_todo_list.domain.util.Constants
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.ACTION_SHOW_DIALOG
+import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
@@ -28,6 +27,9 @@ class AlarmReceiver : BroadcastReceiver() {
     @Inject
     lateinit var alarmUseCases: AlarmUseCases
 
+    @Inject
+    lateinit var todoUseCases: TodoUseCases
+
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
@@ -36,10 +38,11 @@ class AlarmReceiver : BroadcastReceiver() {
 
         todo?.id?.let { id ->
             alarmUseCases.removeAlarm.invoke(todo)
+            todoUseCases.updateTodo.invoke(todo.copy(needShowReminder = true))
 
             val mainIntent = Intent(context, MainActivity::class.java).apply {
                 putExtra(TODO_MODEL, todoJson)
-                setAction(ACTION_SHOW_DIALOG)
+//                setAction(ACTION_SHOW_DIALOG)
             }
             mainIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             val mainPendingIntent = PendingIntent.getActivity(
@@ -62,7 +65,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val notification = NotificationCompat.Builder(context, TodoListApp.ALARM_CHANNEL_ID)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //todo remove?
                 .setSmallIcon(R.drawable.ic_baseline_notifications_24)
-                .setContentTitle(context.getString(R.string.notification))
+                .setContentTitle(context.getString(R.string.reminder))
                 .setContentText(todo.text.take(20))
                 .setAutoCancel(true)
                 .setContentIntent(mainPendingIntent)

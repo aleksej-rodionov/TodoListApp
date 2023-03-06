@@ -6,6 +6,7 @@ import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepositor
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.todo.UpdateTodo
+import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_DIALOG
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -72,6 +73,12 @@ class TodoListPresenter(
 
     private fun mapEntriesToTodoItems(entries: List<Todo>): List<ItemModel.TodoItem> {
         return entries.map {
+            Log.d(TAG_DIALOG, "mapEntriesToTodoItems: needRemind = ${it.needShowReminder}")
+            if (it.needShowReminder) {
+                todoUseCases.updateTodo.invoke(it.copy(needShowReminder = false))
+                viewState.showReminderDialog(it)
+            }
+
             it.toTodoItem()
         }
     }
@@ -112,6 +119,9 @@ class TodoListPresenter(
 interface TodoListView: MvpView {
 
     fun showTodos(todos: List<ItemModel>)
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
+    fun showReminderDialog(todo: Todo)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun navigateAddTodo()
