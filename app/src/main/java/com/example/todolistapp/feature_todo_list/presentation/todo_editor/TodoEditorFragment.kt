@@ -62,7 +62,10 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
 
     override fun onResume() {
         super.onResume()
-        etText.setText(presenter.todoText)
+        binding.apply {
+            etText.setText(presenter.todoText)
+            etText.setSelection(etText.text.length)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
