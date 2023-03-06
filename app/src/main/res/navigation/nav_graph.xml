@@ -14,11 +14,6 @@
         <action
             android:id="@+id/action_todoListFragment_to_todoEditorFragment"
             app:destination="@id/todoEditorFragment" />
-        <argument
-            android:name="todoJson"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/todoEditorFragment"
@@ -34,5 +29,6 @@
     <action
         android:id="@+id/action_global_todoListFragment"
         app:destination="@id/todoListFragment"
-        app:launchSingleTop="true" />
+        app:launchSingleTop="true"
+        app:popUpTo="@id/todoListFragment" />
 </navigation>

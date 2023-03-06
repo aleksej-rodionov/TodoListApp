@@ -14,6 +14,7 @@ import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
+import com.example.todolistapp.feature_todo_list.domain.util.Constants.ACTION_OPEN_LIST
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
@@ -39,7 +40,7 @@ class AlarmReceiver : BroadcastReceiver() {
             todoUseCases.updateTodo.invoke(todo.copy(needShowReminder = true))
 
             val mainIntent = Intent(context, MainActivity::class.java).apply {
-                putExtra(TODO_MODEL, todoJson)
+                setAction(ACTION_OPEN_LIST)
             }
             mainIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             val mainPendingIntent = PendingIntent.getActivity(
@@ -70,6 +71,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             val notificationManager = NotificationManagerCompat.from(context)
             notificationManager.notify(id, notification)
+
         } ?: run {
             Log.d(TAG_ALARM, "AlarmReceiver.onReceive: todo.id is NULL")
         }
