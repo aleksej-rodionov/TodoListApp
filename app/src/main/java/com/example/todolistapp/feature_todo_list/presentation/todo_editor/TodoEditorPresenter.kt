@@ -23,36 +23,33 @@ import moxy.viewstate.strategy.StateStrategyType
 class TodoEditorPresenter(
     private val alarmUseCases: AlarmUseCases,
     private val todoUseCases: TodoUseCases
-): MvpPresenter<TodoEditorView>() {
+) : MvpPresenter<TodoEditorView>() {
 
     private var compDisp: CompositeDisposable? = null
 
     private var pendingSaveTodoToSetAlarm = false
 
-    var todoText: String = ""
-    private var todoCompleted: Boolean = false
-    var todoId: Int? = null
-    private var needShowReminder: Boolean = false
+    private var _todoToEdit: Todo = Todo()
+    val todoToEdit get() = _todoToEdit
 
     fun initAlarmState() {
         viewState.showIsAlarmSet(checkIfAlarmSet())
     }
 
     fun setTodo(todo: Todo?) {
-        todoId = todo?.id
-        todoCompleted = todo?.isCompleted ?: false
-        needShowReminder = todo?.needShowReminder ?: false
-        updateText(todo?.text)
+        todo?.let {
+            _todoToEdit = it
+        }
     }
 
     fun updateText(text: String?) {
-        text?.let { todoText = it }
+        text?.let { _todoToEdit = todoToEdit.copy(text = it) }
     }
 
     fun onSaveClick() {
-        if (todoId == null) {
+        if (todoToEdit.id == null) {
             val newTodo = Todo(
-                text = todoText,
+                text = todoToEdit.text,
                 isCompleted = false,
                 needShowReminder = false
             )
@@ -70,10 +67,10 @@ class TodoEditorPresenter(
                 }).apply { compDisp?.add(this) }
         } else {
             val updatedTodo = Todo(
-                text = todoText,
-                isCompleted = todoCompleted,
-                needShowReminder = needShowReminder,
-                id = todoId
+                text = todoToEdit.text,
+                isCompleted = todoToEdit.isCompleted,
+                needShowReminder = todoToEdit.needShowReminder,
+                id = todoToEdit.id
             )
             todoUseCases.updateTodo.invoke(updatedTodo).subscribe()
             viewState.navigateUp()
@@ -82,18 +79,17 @@ class TodoEditorPresenter(
 
     fun deleteTodo() {
         val todo = Todo(
-            text = todoText,
-            isCompleted = todoCompleted,
-            needShowReminder = needShowReminder,
-            id = todoId
+            text = todoToEdit.text,
+            isCompleted = todoToEdit.isCompleted,
+            needShowReminder = todoToEdit.needShowReminder,
+            id = todoToEdit.id
         )
         todoUseCases.deleteTodo.invoke(todo).subscribe()
         viewState.navigateUp()
     }
 
     fun onAlarmClick() {
-
-        if (todoId == null) {
+        if (todoToEdit.id == null) {
             pendingSaveTodoToSetAlarm = !pendingSaveTodoToSetAlarm
             viewState.showIsAlarmSet(pendingSaveTodoToSetAlarm)
         } else {
@@ -129,19 +125,33 @@ class TodoEditorPresenter(
     }
 
     private fun setAlarm() {
-        todoId?.let {
-            alarmUseCases.setAlarm.invoke(Todo(todoText, todoCompleted, needShowReminder, it))
+        todoToEdit.id?.let {
+            alarmUseCases.setAlarm.invoke(
+                Todo(
+                    todoToEdit.text,
+                    todoToEdit.isCompleted,
+                    todoToEdit.needShowReminder,
+                    it
+                )
+            )
         } ?: run {
             pendingSaveTodoToSetAlarm = true
         }
     }
 
     private fun removeAlarm() {
-        alarmUseCases.removeAlarm.invoke(Todo(todoText, todoCompleted, needShowReminder, todoId))
+        alarmUseCases.removeAlarm.invoke(
+            Todo(
+                todoToEdit.text,
+                todoToEdit.isCompleted,
+                todoToEdit.needShowReminder,
+                todoToEdit.id
+            )
+        )
     }
 
     private fun checkIfAlarmSet(): Boolean {
-        return todoId?.let {
+        return todoToEdit.id?.let {
             alarmUseCases.checkIfAlarmSet.invoke(it)
         } ?: false
     }
@@ -158,9 +168,8 @@ class TodoEditorPresenter(
 }
 
 
-
 @StateStrategyType(AddToEndStrategy::class)
-interface TodoEditorView: MvpView {
+interface TodoEditorView : MvpView {
 
     fun showIsAlarmSet(set: Boolean)
 

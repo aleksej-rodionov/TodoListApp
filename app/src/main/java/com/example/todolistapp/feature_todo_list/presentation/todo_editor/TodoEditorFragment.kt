@@ -63,7 +63,7 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
     override fun onResume() {
         super.onResume()
         binding.apply {
-            etText.setText(presenter.todoText)
+            etText.setText(presenter.todoToEdit.text)
             etText.setSelection(etText.text.length)
         }
     }
@@ -72,7 +72,7 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
         inflater.inflate(R.menu.menu_edit_todo, menu)
 
         this.menu = menu
-        if (presenter.todoId == null) {
+        if (presenter.todoToEdit.id == null) {
             menu.findItem(R.id.action_delete).setVisible(false)
         }
 
