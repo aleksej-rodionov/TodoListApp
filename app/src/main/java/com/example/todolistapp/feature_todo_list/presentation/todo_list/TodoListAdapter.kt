@@ -1,6 +1,8 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_list
 
-import android.content.Context
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +10,10 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.addListener
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.example.todolistapp.R
-import com.example.todolistapp.databinding.ItemTodoBinding
-import com.example.todolistapp.feature_todo_list.domain.model.Todo
 
 class TodoListAdapter(
     private val onTodoClick: (ItemModel.TodoItem) -> Unit,
@@ -62,8 +61,13 @@ class TodoListAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
 
         private fun bindTodo(item: ItemModel.TodoItem) {
+            val layout = itemView.findViewById<ConstraintLayout>(R.id.clTodo)
             val checkBox = itemView.findViewById<CheckBox>(R.id.checkBox)
             val textView = itemView.findViewById<TextView>(R.id.textView)
+
+            layout.scaleX = 1f
+            layout.scaleY = 1f
+            layout.alpha = 1f
 
             checkBox.setOnCheckedChangeListener(null)
             checkBox.isChecked = item.isCompleted
@@ -77,7 +81,34 @@ class TodoListAdapter(
             }
 
             itemView.rootView.setOnClickListener { onItemClick(item) }
-            checkBox.setOnCheckedChangeListener { compoundButton, b -> onCheckboxChanged(item, b) }
+            checkBox.setOnCheckedChangeListener { compoundButton, b ->
+
+                if (b) {
+                    animateHideTodo(layout) { onCheckboxChanged(item, b) }
+                } else onCheckboxChanged(item, b)
+            }
+        }
+
+        private fun animateHideTodo(
+            layout: ConstraintLayout,
+            callback: () -> Unit
+        ) {
+            val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f)
+            val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f)
+            val alpha = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f)
+            val hideView =
+                ObjectAnimator.ofPropertyValuesHolder(layout, scaleX, scaleY, alpha)
+                    .apply {
+                        duration = 300
+                    }
+
+            AnimatorSet().apply {
+                play(hideView)
+                start()
+                addListener(onEnd = {
+                    callback()
+                })
+            }
         }
 
         private fun bindDivider(item: ItemModel.Divider) {

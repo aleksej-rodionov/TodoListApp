@@ -49,6 +49,7 @@ class TodoListPresenter(
 
     fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
         todoUseCases.updateTodo.invoke(todo.copy(isCompleted = completed).toTodo())
+        if (completed) alarmUseCases.removeAlarm.invoke(todo.toTodo())
     }
 
     fun onShowCompletedChanged(show: Boolean) {
