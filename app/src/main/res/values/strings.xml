@@ -8,4 +8,5 @@
     <string name="hide_completed">Скрыть выполненные</string>
     <string name="show_completed">Отобразить выполненные</string>
     <string name="no_todos">Заметок пока нет.\nНажмите + чтобы добавить заметку</string>
+    <string name="todo_text_hint">Текст заметки</string>
 </resources>

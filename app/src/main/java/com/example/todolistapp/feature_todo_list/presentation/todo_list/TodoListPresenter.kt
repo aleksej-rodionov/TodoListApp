@@ -3,17 +3,14 @@ package com.example.todolistapp.feature_todo_list.presentation.todo_list
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
-import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import java.util.concurrent.TimeUnit
 
 @InjectViewState
 class TodoListPresenter(

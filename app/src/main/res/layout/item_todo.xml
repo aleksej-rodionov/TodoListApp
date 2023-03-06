@@ -22,7 +22,7 @@
         android:id="@+id/textView"
         android:layout_marginHorizontal="8dp"
         android:maxLines="2"
-        tools:text="Тект заметки"
+        tools:text="@string/todo_text_hint"
         android:ellipsize="end"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/checkBox"
