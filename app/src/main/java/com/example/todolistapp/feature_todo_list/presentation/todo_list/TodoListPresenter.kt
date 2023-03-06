@@ -17,8 +17,6 @@ import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
-private const val TAG = "TodoListPresenter"
-
 @InjectViewState
 class TodoListPresenter(
     private val alarmUseCases: AlarmUseCases,
@@ -43,7 +41,6 @@ class TodoListPresenter(
                 todoItems.addAll(mapEntriesToTodoItems(it))
                 viewState.showTodos(mapEntriesByShowCompleted(todoItems))
             }, {
-                Log.d("TAG_TODO_LIST", "observeAllTodos: error = ${it.message}")
                 it.printStackTrace()
             }).apply { compDisp?.add(this) }
     }
@@ -58,7 +55,6 @@ class TodoListPresenter(
     }
 
     fun onShowCompletedChanged(show: Boolean) {
-        Log.d(TAG, "onShowCompletedChanged: $show")
         showCompleted = show
         viewState.showTodos(mapEntriesByShowCompleted(todoItems))
     }
@@ -73,7 +69,6 @@ class TodoListPresenter(
 
     private fun mapEntriesToTodoItems(entries: List<Todo>): List<ItemModel.TodoItem> {
         return entries.map {
-            Log.d(TAG_DIALOG, "mapEntriesToTodoItems: needRemind = ${it.needShowReminder}")
             if (it.needShowReminder) {
                 todoUseCases.updateTodo.invoke(it.copy(needShowReminder = false))
                 viewState.showReminderDialog(it)

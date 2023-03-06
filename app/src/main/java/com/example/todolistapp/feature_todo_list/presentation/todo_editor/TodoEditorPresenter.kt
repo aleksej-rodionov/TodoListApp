@@ -19,8 +19,6 @@ import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
-private const val TAG = "TodoEditorPresenter"
-
 @InjectViewState
 class TodoEditorPresenter(
     private val alarmUseCases: AlarmUseCases,
@@ -41,7 +39,6 @@ class TodoEditorPresenter(
     }
 
     fun setTodo(todo: Todo?) {
-        Log.d(TAG, "setTodo: called")
         todoId = todo?.id
         todoCompleted = todo?.isCompleted ?: false
         needShowReminder = todo?.needShowReminder ?: false

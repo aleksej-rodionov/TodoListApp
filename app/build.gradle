@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android' //todo
+    id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
@@ -32,7 +32,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-//        freeCompilerArgs = ['-Xjvm-default=compatibility'] //todo
     }
     buildFeatures {
         viewBinding true
@@ -52,14 +51,11 @@ dependencies {
     //dagger
     implementation "com.google.dagger:dagger-android:2.40.5"
     implementation "com.google.dagger:dagger-android-support:2.40.5"
-    // if you use the support libraries
-    kapt "com.google.dagger:dagger-android-processor:2.40.5" //todo remove
     kapt "com.google.dagger:dagger-compiler:2.40.5"
 
     // Room
     implementation "androidx.room:room-runtime:2.4.1"
     kapt "androidx.room:room-compiler:2.4.1"
-    implementation "androidx.room:room-ktx:2.4.1" //todo remove
     // RxJava for Room
     implementation "androidx.room:room-rxjava2:2.4.1"
 
