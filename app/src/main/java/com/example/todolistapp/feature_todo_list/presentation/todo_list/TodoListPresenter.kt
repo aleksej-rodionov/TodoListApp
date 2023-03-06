@@ -47,9 +47,13 @@ class TodoListPresenter(
             }).apply { compDisp?.add(this) }
     }
 
-    fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
-        todoUseCases.updateTodo.invoke(todo.copy(isCompleted = completed).toTodo())
-        if (completed) alarmUseCases.removeAlarm.invoke(todo.toTodo())
+    fun onCompletedChanged(todo: Todo, completed: Boolean) {
+        var updatedTodo = todo.copy(isCompleted = completed)
+        if (completed) {
+            updatedTodo = updatedTodo.copy(needShowReminder = false)
+            alarmUseCases.removeAlarm.invoke(todo)
+        }
+        todoUseCases.updateTodo.invoke(updatedTodo)
     }
 
     fun onShowCompletedChanged(show: Boolean) {

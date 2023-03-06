@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class TodoEntity(
     val text: String,
     val isCompleted: Boolean = false,
+    val needShowReminder: Boolean = false,
     @PrimaryKey val id: Int? = null
 )

@@ -31,9 +31,10 @@ class TodoEditorPresenter(
 
     private var pendingSaveTodoToSetAlarm = false
 
-    var todoId: Int? = null
-    private var todoCompleted: Boolean = false
     var todoText: String = ""
+    private var todoCompleted: Boolean = false
+    var todoId: Int? = null
+    private var needShowReminder: Boolean = false
 
     fun initAlarmState() {
         viewState.showIsAlarmSet(checkIfAlarmSet())
@@ -43,6 +44,7 @@ class TodoEditorPresenter(
         Log.d(TAG, "setTodo: called")
         todoId = todo?.id
         todoCompleted = todo?.isCompleted ?: false
+        needShowReminder = todo?.needShowReminder ?: false
         updateText(todo?.text)
     }
 
@@ -54,7 +56,8 @@ class TodoEditorPresenter(
         if (todoId == null) {
             val newTodo = Todo(
                 text = todoText,
-                isCompleted = false
+                isCompleted = false,
+                needShowReminder = false
             )
             todoUseCases.insertTodo.invoke(newTodo)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,6 +75,7 @@ class TodoEditorPresenter(
             val updatedTodo = Todo(
                 text = todoText,
                 isCompleted = todoCompleted,
+                needShowReminder = needShowReminder,
                 id = todoId
             )
             todoUseCases.updateTodo.invoke(updatedTodo)
@@ -82,6 +86,7 @@ class TodoEditorPresenter(
         val todo = Todo(
             text = todoText,
             isCompleted = todoCompleted,
+            needShowReminder = needShowReminder,
             id = todoId
         )
         todoUseCases.deleteTodo.invoke(todo)
@@ -132,14 +137,14 @@ class TodoEditorPresenter(
 
     private fun setAlarm() {
         todoId?.let {
-            alarmUseCases.setAlarm.invoke(Todo(todoText, todoCompleted, it))
+            alarmUseCases.setAlarm.invoke(Todo(todoText, todoCompleted, needShowReminder, it))
         } ?: run {
             pendingSaveTodoToSetAlarm = true
         }
     }
 
     private fun removeAlarm() {
-        alarmUseCases.removeAlarm.invoke(Todo(todoText, todoCompleted, todoId))
+        alarmUseCases.removeAlarm.invoke(Todo(todoText, todoCompleted, needShowReminder, todoId))
     }
 
     private fun checkIfAlarmSet(): Boolean {

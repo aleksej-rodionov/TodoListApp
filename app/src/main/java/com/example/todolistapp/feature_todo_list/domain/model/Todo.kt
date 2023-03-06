@@ -7,5 +7,6 @@ import kotlinx.android.parcel.Parcelize
 data class Todo(
     val text: String,
     val isCompleted: Boolean,
+    val needShowReminder: Boolean,
     val id: Int? = null
 ): Parcelable

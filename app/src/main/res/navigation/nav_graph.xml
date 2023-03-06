@@ -9,10 +9,16 @@
         android:id="@+id/todoListFragment"
         android:name="com.example.todolistapp.feature_todo_list.presentation.todo_list.TodoListFragment"
         android:label="Список заметок"
+        android:tag="todo_list_fragment_tag"
         tools:layout="@layout/fragment_todo_list">
         <action
             android:id="@+id/action_todoListFragment_to_todoEditorFragment"
             app:destination="@id/todoEditorFragment" />
+        <argument
+            android:name="todoJson"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/todoEditorFragment"
@@ -25,4 +31,8 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <action
+        android:id="@+id/action_global_todoListFragment"
+        app:destination="@id/todoListFragment"
+        app:launchSingleTop="true" />
 </navigation>

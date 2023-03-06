@@ -14,6 +14,7 @@ import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
 import com.example.todolistapp.feature_todo_list.domain.util.Constants
+import com.example.todolistapp.feature_todo_list.domain.util.Constants.ACTION_SHOW_DIALOG
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_ALARM
 import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
@@ -30,13 +31,16 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
-        val todoString = intent?.getStringExtra(Constants.TODO_MODEL)
-        val todo = Gson().fromJson(todoString, Todo::class.java)
+        val todoJson = intent?.getStringExtra(TODO_MODEL)
+        val todo = Gson().fromJson(todoJson, Todo::class.java)
 
         todo?.id?.let { id ->
             alarmUseCases.removeAlarm.invoke(todo)
 
-            val mainIntent = Intent(context, MainActivity::class.java)
+            val mainIntent = Intent(context, MainActivity::class.java).apply {
+                putExtra(TODO_MODEL, todoJson)
+                setAction(ACTION_SHOW_DIALOG)
+            }
             mainIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             val mainPendingIntent = PendingIntent.getActivity(
                 context,
@@ -46,7 +50,6 @@ class AlarmReceiver : BroadcastReceiver() {
             )
 
             val completeIntent = Intent(context, AlarmNotificationReceiver::class.java).apply {
-                val todoJson = Gson().toJson(todo)
                 putExtra(TODO_MODEL, todoJson)
             }
             val completePendingIntent = PendingIntent.getBroadcast(

@@ -7,6 +7,7 @@ fun TodoEntity.toTodo(): Todo {
     return Todo(
         text,
         isCompleted,
+        needShowReminder,
         id
     )
 }
@@ -15,6 +16,7 @@ fun Todo.toTodoEntity(): TodoEntity {
     return TodoEntity(
         text,
         isCompleted,
+        needShowReminder,
         id
     )
 }

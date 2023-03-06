@@ -6,6 +6,7 @@ sealed class ItemModel {
     data class TodoItem(
         val text: String,
         val isCompleted: Boolean,
+        val needShowReminder: Boolean,
         val id: Int? = null
     ): ItemModel()
 
@@ -18,6 +19,7 @@ fun Todo.toTodoItem(): ItemModel.TodoItem {
     return ItemModel.TodoItem(
         text = this.text,
         isCompleted = this.isCompleted,
+        needShowReminder = needShowReminder,
         id = this.id
     )
 }
@@ -26,6 +28,7 @@ fun ItemModel.TodoItem.toTodo(): Todo {
     return Todo(
         text = this.text,
         isCompleted = this.isCompleted,
+        needShowReminder = needShowReminder,
         id = this.id
     )
 }

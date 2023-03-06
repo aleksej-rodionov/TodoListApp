@@ -20,13 +20,12 @@ class AlarmNotificationReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         TodoListApp.component?.inject(this)
 
-//        val todo = intent?.getParcelableExtra(Constants.TODO_MODEL) as? Todo
         val todoString = intent?.getStringExtra(Constants.TODO_MODEL)
         val todo = Gson().fromJson(todoString, Todo::class.java)
 
         todo?.id?.let { id ->
 
-            todoUseCases.updateTodo.invoke(todo.copy(isCompleted = true))
+            todoUseCases.updateTodo.invoke(todo.copy(isCompleted = true, needShowReminder = false))
             NotificationManagerCompat.from(context).cancel(null, id)
         }
     }
