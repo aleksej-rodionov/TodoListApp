@@ -2,6 +2,7 @@ package com.example.todolistapp.feature_todo_list.data.local
 
 import androidx.room.*
 import com.example.todolistapp.feature_todo_list.data.local.entity.TodoEntity
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -12,10 +13,10 @@ interface TodoDao {
     fun insertTodo(todo: TodoEntity): Single<Long>
 
     @Update
-    fun updateRodo(todo: TodoEntity)
+    fun updateRodo(todo: TodoEntity): Completable
 
     @Delete
-    fun deleteTodo(todo: TodoEntity)
+    fun deleteTodo(todo: TodoEntity): Completable
 
     @Query("SELECT * FROM todoentity WHERE id = :id")
     fun getTodoById(id: Int): Single<TodoEntity>

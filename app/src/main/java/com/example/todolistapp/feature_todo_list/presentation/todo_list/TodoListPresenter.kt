@@ -33,8 +33,7 @@ class TodoListPresenter(
     private fun observeAllTodos() {
         viewState.showHideLoader(true)
         val output = todoUseCases.getAllTodos.invoke()
-        output.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        output.observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewState.showHideLoader(false)
                 viewState.showHideNoTodosText(it.isEmpty())
@@ -56,7 +55,7 @@ class TodoListPresenter(
             updatedTodo = updatedTodo.copy(needShowReminder = false)
             alarmUseCases.removeAlarm.invoke(todo)
         }
-        todoUseCases.updateTodo.invoke(updatedTodo)
+        todoUseCases.updateTodo.invoke(updatedTodo).subscribe()
     }
 
     fun onShowCompletedChanged(show: Boolean) {
@@ -75,7 +74,7 @@ class TodoListPresenter(
     private fun mapEntriesToTodoItems(entries: List<Todo>): List<ItemModel.TodoItem> {
         return entries.map {
             if (it.needShowReminder) {
-                todoUseCases.updateTodo.invoke(it.copy(needShowReminder = false))
+                todoUseCases.updateTodo.invoke(it.copy(needShowReminder = false)).subscribe()
                 viewState.showReminderDialog(it)
             }
 

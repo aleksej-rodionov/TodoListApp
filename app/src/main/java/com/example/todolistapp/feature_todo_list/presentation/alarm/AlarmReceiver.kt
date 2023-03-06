@@ -37,7 +37,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         todo?.id?.let { id ->
             alarmUseCases.removeAlarm.invoke(todo)
-            todoUseCases.updateTodo.invoke(todo.copy(needShowReminder = true))
+            todoUseCases.updateTodo.invoke(todo.copy(needShowReminder = true)).subscribe()
 
             val mainIntent = Intent(context, MainActivity::class.java).apply {
                 setAction(ACTION_OPEN_LIST)

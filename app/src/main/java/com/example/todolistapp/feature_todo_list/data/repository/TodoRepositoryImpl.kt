@@ -7,49 +7,32 @@ import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodo
 import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodoEntity
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "TodoRepositoryImpl"
 
 @SuppressLint("CheckResult")
 class TodoRepositoryImpl(
     private val todoDao: TodoDao
-): TodoRepository {
+) : TodoRepository {
 
     override fun insertTodo(todo: Todo): Single<Long> {
         return todoDao.insertTodo(todo.toTodoEntity())
             .subscribeOn(Schedulers.io())
     }
 
-    override fun updateTodo(todo: Todo) {
-        Observable.fromCallable {
-            Runnable {
-                todoDao.updateRodo(todo.toTodoEntity())
-            }.run()
-        }.subscribeOn(Schedulers.io())
-            .subscribe({
-                Log.d(TAG, "updateTodo: success")
-            }, {
-                Log.d(TAG, "updateTodo: error = ${it.message}")
-            })
-    }
+    override fun updateTodo(todo: Todo): Completable = todoDao.updateRodo(todo.toTodoEntity())
+        .subscribeOn(Schedulers.io())
 
-    override fun deleteTodo(todo: Todo) {
-        Observable.fromCallable {
-            Runnable {
-                todoDao.deleteTodo(todo.toTodoEntity())
-            }.run()
-        }.subscribeOn(Schedulers.io())
-            .subscribe({
-                Log.d(TAG, "deleteTodo: success")
-            }, {
-                Log.d(TAG, "deleteTodo: error = ${it.message}")
-            })
-    }
+    override fun deleteTodo(todo: Todo): Completable = todoDao.deleteTodo(todo.toTodoEntity())
+        .subscribeOn(Schedulers.io())
 
     override fun getTodoById(id: Int): Single<Todo> {
         return todoDao.getTodoById(id).map {
@@ -58,10 +41,11 @@ class TodoRepositoryImpl(
     }
 
     override fun getAllTodos(): Flowable<List<Todo>> {
-        return todoDao.getAllTodos().map { entityList ->
-            entityList.map {
-                it.toTodo()
-            }
-        }
+        return todoDao.getAllTodos()
+            .map { entityList ->
+                entityList.map {
+                    it.toTodo()
+                }
+            }.subscribeOn(Schedulers.io())
     }
 }

@@ -25,7 +25,7 @@ class AlarmNotificationReceiver: BroadcastReceiver() {
 
         todo?.id?.let { id ->
 
-            todoUseCases.updateTodo.invoke(todo.copy(isCompleted = true, needShowReminder = false))
+            todoUseCases.updateTodo.invoke(todo.copy(isCompleted = true, needShowReminder = false)).subscribe()
             NotificationManagerCompat.from(context).cancel(null, id)
         }
     }

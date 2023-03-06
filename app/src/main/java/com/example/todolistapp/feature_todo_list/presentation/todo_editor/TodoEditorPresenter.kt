@@ -75,7 +75,8 @@ class TodoEditorPresenter(
                 needShowReminder = needShowReminder,
                 id = todoId
             )
-            todoUseCases.updateTodo.invoke(updatedTodo)
+            todoUseCases.updateTodo.invoke(updatedTodo).subscribe()
+            viewState.navigateUp()
         }
     }
 
@@ -86,7 +87,7 @@ class TodoEditorPresenter(
             needShowReminder = needShowReminder,
             id = todoId
         )
-        todoUseCases.deleteTodo.invoke(todo)
+        todoUseCases.deleteTodo.invoke(todo).subscribe()
         viewState.navigateUp()
     }
 
