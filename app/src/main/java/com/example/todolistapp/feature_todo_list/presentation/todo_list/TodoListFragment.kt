@@ -46,6 +46,16 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
         todoListAdapter?.setEntries(todos)
     }
 
+    override fun showHideNoTodosText(show: Boolean) {
+        binding.tvNoTodos.visibility = if (show) View.VISIBLE
+        else View.GONE
+    }
+
+    override fun showHideLoader(show: Boolean) {
+        binding.progressBar.visibility = if (show) View.VISIBLE
+        else View.GONE
+    }
+
     override fun navigateAddTodo() {
         val action =
             TodoListFragmentDirections.actionTodoListFragmentToTodoEditorFragment(null)

@@ -1,10 +1,13 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_editor
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,6 +20,7 @@ import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
+
 
 class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), TodoEditorView {
 
@@ -48,6 +52,10 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
         presenter.setTodo(todo)
         (activity as MainActivity).supportActionBar?.title = if (todo == null) requireContext().getString(R.string.new_todo)
         else requireContext().getString(R.string.todo)
+
+        binding.etText.requestFocus()
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(binding.etText, InputMethodManager.SHOW_IMPLICIT)
 
         initListeners()
     }

@@ -3,6 +3,7 @@ package com.example.todolistapp.feature_todo_list.presentation.todo_list
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.use_case.alarm.AlarmUseCases
 import com.example.todolistapp.feature_todo_list.domain.use_case.todo.TodoUseCases
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -12,6 +13,7 @@ import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
+import java.util.concurrent.TimeUnit
 
 @InjectViewState
 class TodoListPresenter(
@@ -29,13 +31,20 @@ class TodoListPresenter(
     }
 
     private fun observeAllTodos() {
+        viewState.showHideLoader(true)
         val output = todoUseCases.getAllTodos.invoke()
         output.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                viewState.showHideLoader(false)
+                viewState.showHideNoTodosText(it.isEmpty())
                 todoItems.clear()
-                todoItems.addAll(mapEntriesToTodoItems(it))
-                viewState.showTodos(mapEntriesByShowCompleted(todoItems))
+                if (it.isNotEmpty()) {
+                    todoItems.addAll(mapEntriesToTodoItems(it))
+                    viewState.showTodos(mapEntriesByShowCompleted(todoItems))
+                } else {
+                    viewState.showTodos(todoItems)
+                }
             }, {
                 it.printStackTrace()
             }).apply { compDisp?.add(this) }
@@ -110,6 +119,10 @@ class TodoListPresenter(
 interface TodoListView: MvpView {
 
     fun showTodos(todos: List<ItemModel>)
+
+    fun showHideNoTodosText(show: Boolean)
+
+    fun showHideLoader(show: Boolean)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showReminderDialog(todo: Todo)
