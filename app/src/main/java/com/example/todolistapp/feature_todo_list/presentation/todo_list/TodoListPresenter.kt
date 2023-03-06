@@ -20,7 +20,6 @@ private const val TAG = "TodoListPresenter"
 
 @InjectViewState
 class TodoListPresenter(
-    private val alarmUseCases: AlarmUseCases,
     private val todoUseCases: TodoUseCases
 ): MvpPresenter<TodoListView>() {
 

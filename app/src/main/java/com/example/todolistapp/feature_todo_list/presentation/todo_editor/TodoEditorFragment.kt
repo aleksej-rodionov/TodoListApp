@@ -104,10 +104,6 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
             fab.setOnClickListener {
                 presenter.onSaveClick()
             }
-
-            fabTest.setOnClickListener {
-                presenter.testCheck()
-            }
         }
     }
 

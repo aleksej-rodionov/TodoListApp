@@ -114,11 +114,6 @@ class TodoEditorPresenter(
         }
     }
 
-    fun testCheck() {
-        val alarmSet = checkIfAlarmSet()
-        Log.d(TAG_ALARM, "testCheck: $alarmSet")
-    }
-
     private fun fetchNewTodoAndSetAlarmForIt(id: Int) {
         todoUseCases.getTodoById.invoke(id)
             .observeOn(AndroidSchedulers.mainThread())
