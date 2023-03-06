@@ -66,24 +66,14 @@ class TodoEditorPresenter(
                     it.printStackTrace()
                 }).apply { compDisp?.add(this) }
         } else {
-            val updatedTodo = Todo(
-                text = todoToEdit.text,
-                isCompleted = todoToEdit.isCompleted,
-                needShowReminder = todoToEdit.needShowReminder,
-                id = todoToEdit.id
-            )
+            val updatedTodo = todoToEdit.copy()
             todoUseCases.updateTodo.invoke(updatedTodo).subscribe()
             viewState.navigateUp()
         }
     }
 
     fun deleteTodo() {
-        val todo = Todo(
-            text = todoToEdit.text,
-            isCompleted = todoToEdit.isCompleted,
-            needShowReminder = todoToEdit.needShowReminder,
-            id = todoToEdit.id
-        )
+        val todo = todoToEdit.copy()
         todoUseCases.deleteTodo.invoke(todo).subscribe()
         viewState.navigateUp()
     }
@@ -94,21 +84,11 @@ class TodoEditorPresenter(
             viewState.showIsAlarmSet(pendingSaveTodoToSetAlarm)
         } else {
             if (checkIfAlarmSet()) {
-                try {
-                    removeAlarm()
-                    viewState.showIsAlarmSet(false)
-                } catch (e: Exception) {
-                    Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
-                    e.printStackTrace()
-                }
+                removeAlarm()
+                viewState.showIsAlarmSet(false)
             } else {
-                try {
-                    setAlarm()
-                    viewState.showIsAlarmSet(true)
-                } catch (e: Exception) {
-                    Log.d(TAG_ALARM, "onAlarmClick: exception = ${e.message}")
-                    e.printStackTrace()
-                }
+                setAlarm()
+                viewState.showIsAlarmSet(true)
             }
         }
     }
@@ -126,28 +106,14 @@ class TodoEditorPresenter(
 
     private fun setAlarm() {
         todoToEdit.id?.let {
-            alarmUseCases.setAlarm.invoke(
-                Todo(
-                    todoToEdit.text,
-                    todoToEdit.isCompleted,
-                    todoToEdit.needShowReminder,
-                    it
-                )
-            )
+            alarmUseCases.setAlarm.invoke(todoToEdit.copy())
         } ?: run {
             pendingSaveTodoToSetAlarm = true
         }
     }
 
     private fun removeAlarm() {
-        alarmUseCases.removeAlarm.invoke(
-            Todo(
-                todoToEdit.text,
-                todoToEdit.isCompleted,
-                todoToEdit.needShowReminder,
-                todoToEdit.id
-            )
-        )
+        alarmUseCases.removeAlarm.invoke(todoToEdit.copy())
     }
 
     private fun checkIfAlarmSet(): Boolean {
