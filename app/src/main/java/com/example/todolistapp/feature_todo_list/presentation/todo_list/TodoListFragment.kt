@@ -42,6 +42,11 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
         initListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.showRemindersFromReminderList()
+    }
+
     override fun showTodos(todos: List<ItemModel>) {
         todoListAdapter?.setEntries(todos)
     }
@@ -101,9 +106,15 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
             setMessage(todo.text.take(20))
             setPositiveButton(resources.getString(R.string.completed)) { dialog, which ->
                 presenter.onCompletedChanged(todo, true)
+                presenter.clearTodoFromReminderList(todo)
             }
         }
-        val dialog = builder.create()
+        val dialog = builder.create().apply {
+            setCanceledOnTouchOutside(true)
+            setOnCancelListener {
+                presenter.clearTodoFromReminderList(todo)
+            }
+        }
         dialog.show()
         dialog.getButton(Dialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.secondary))
     }

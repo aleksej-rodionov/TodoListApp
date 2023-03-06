@@ -23,6 +23,8 @@ class TodoListPresenter(
     private var showCompleted = false
     private val todoItems = mutableListOf<ItemModel.TodoItem>()
 
+    private var todosToRemind = mutableListOf<Todo>()
+
     init {
         observeAllTodos()
     }
@@ -68,11 +70,25 @@ class TodoListPresenter(
         viewState.navigateEditTodo(todo)
     }
 
+    fun clearTodoFromReminderList(todo: Todo) {
+        todosToRemind.removeAll {
+            it.id == todo.id
+        }
+    }
+
+    fun showRemindersFromReminderList() {
+        todosToRemind.forEach {
+            viewState.showReminderDialog(it)
+        }
+    }
+
     private fun mapEntriesToTodoItems(entries: List<Todo>): List<ItemModel.TodoItem> {
         return entries.map {
             if (it.needShowReminder) {
+
                 todoUseCases.updateTodo.invoke(it.copy(needShowReminder = false)).subscribe()
                 viewState.showReminderDialog(it)
+                todosToRemind.add(it)
             }
 
             it.toTodoItem()
