@@ -2,24 +2,18 @@ package com.example.todolistapp.feature_todo_list.presentation.todo_list
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
-import android.view.ContextThemeWrapper
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoListBinding
 import com.example.todolistapp.feature_todo_list.domain.model.Todo
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_DIALOG
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
-
-private const val TAG = "TodoListFragment"
 
 class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), TodoListView {
 
@@ -92,8 +86,6 @@ class TodoListFragment : MvpAppCompatFragment(R.layout.fragment_todo_list), Todo
     }
 
     override fun showReminderDialog(todo: Todo) {
-        Log.d(TAG_DIALOG, "showDialog: $todo")
-
         val builder = AlertDialog.Builder(requireContext()).apply {
             setTitle(resources.getString(R.string.reminder))
             setMessage(todo.text.take(20))

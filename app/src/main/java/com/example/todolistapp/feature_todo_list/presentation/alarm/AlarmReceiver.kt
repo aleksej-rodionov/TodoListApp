@@ -20,8 +20,6 @@ import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import com.google.gson.Gson
 import javax.inject.Inject
 
-private const val TAG = "AlarmReceiver"
-
 class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
@@ -42,7 +40,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
             val mainIntent = Intent(context, MainActivity::class.java).apply {
                 putExtra(TODO_MODEL, todoJson)
-//                setAction(ACTION_SHOW_DIALOG)
             }
             mainIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             val mainPendingIntent = PendingIntent.getActivity(
@@ -63,7 +60,6 @@ class AlarmReceiver : BroadcastReceiver() {
             )
 
             val notification = NotificationCompat.Builder(context, TodoListApp.ALARM_CHANNEL_ID)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC) //todo remove?
                 .setSmallIcon(R.drawable.ic_baseline_notifications_24)
                 .setContentTitle(context.getString(R.string.reminder))
                 .setContentText(todo.text.take(20))

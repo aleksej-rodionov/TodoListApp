@@ -1,24 +1,22 @@
 package com.example.todolistapp.feature_todo_list.presentation.todo_editor
 
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApp
 import com.example.todolistapp.databinding.FragmentTodoEditorBinding
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TAG_DIALOG
-import com.example.todolistapp.feature_todo_list.domain.util.Constants.TODO_MODEL
 import com.example.todolistapp.feature_todo_list.presentation.MainActivity
 import kotlinx.android.synthetic.main.fragment_todo_editor.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import javax.inject.Inject
-
-private const val TAG = "TodoEditorFragment"
 
 class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), TodoEditorView {
 
@@ -104,10 +102,6 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
 
             fab.setOnClickListener {
                 presenter.onSaveClick()
-            }
-
-            fabTest.setOnClickListener {
-                presenter.testCheck()
             }
         }
     }
