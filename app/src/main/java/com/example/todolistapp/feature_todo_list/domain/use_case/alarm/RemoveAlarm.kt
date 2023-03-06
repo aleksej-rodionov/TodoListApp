@@ -24,7 +24,6 @@ class RemoveAlarm(
 
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
-//            intent.putExtra(TODO_MODEL, todo)
             val todoString = Gson().toJson(todo)
             intent.putExtra(TODO_MODEL, todoString)
 
@@ -38,7 +37,7 @@ class RemoveAlarm(
             alarmManager.cancel(pendingIntent)
             pendingIntent.cancel()
         } ?: run {
-            Log.d(Constants.TAG_ALARM, "RemoveAlarm.invoke: exception")
+            Log.d(TAG_ALARM, "RemoveAlarm.invoke: exception")
             throw IllegalArgumentException()
         }
     }

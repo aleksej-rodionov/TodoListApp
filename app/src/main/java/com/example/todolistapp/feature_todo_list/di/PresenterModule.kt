@@ -17,9 +17,10 @@ class PresenterModule {
 
     @Provides
     fun provideTodoListPresenter(
+        alarmUseCases: AlarmUseCases,
         todoUseCases: TodoUseCases
     ): TodoListPresenter {
-        return TodoListPresenter(todoUseCases)
+        return TodoListPresenter(alarmUseCases, todoUseCases)
     }
 
     @Provides

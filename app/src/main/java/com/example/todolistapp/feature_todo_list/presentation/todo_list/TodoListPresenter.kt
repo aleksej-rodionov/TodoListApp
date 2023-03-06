@@ -20,6 +20,7 @@ private const val TAG = "TodoListPresenter"
 
 @InjectViewState
 class TodoListPresenter(
+    private val alarmUseCases: AlarmUseCases,
     private val todoUseCases: TodoUseCases
 ): MvpPresenter<TodoListView>() {
 
@@ -48,6 +49,7 @@ class TodoListPresenter(
 
     fun onCompletedChanged(todo: ItemModel.TodoItem, completed: Boolean) {
         todoUseCases.updateTodo.invoke(todo.copy(isCompleted = completed).toTodo())
+        if (completed) alarmUseCases.removeAlarm.invoke(todo.toTodo())
     }
 
     fun onShowCompletedChanged(show: Boolean) {
