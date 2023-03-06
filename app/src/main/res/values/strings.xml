@@ -7,4 +7,5 @@
     <string name="new_todo">Новая заметка</string>
     <string name="hide_completed">Скрыть выполненные</string>
     <string name="show_completed">Отобразить выполненные</string>
+    <string name="no_todos">Заметок пока нет.\nНажмите + чтобы добавить заметку</string>
 </resources>
