@@ -57,7 +57,6 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
     override fun onResume() {
         super.onResume()
         etText.setText(presenter.todoText)
-        presenter.initAlarmState()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -67,6 +66,8 @@ class TodoEditorFragment : MvpAppCompatFragment(R.layout.fragment_todo_editor), 
         if (presenter.todoId == null) {
             menu.findItem(R.id.action_delete).setVisible(false)
         }
+
+        presenter.initAlarmState()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
