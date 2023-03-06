@@ -51,6 +51,6 @@ class SetAlarm(
     }
 
     private fun countAlarmTime(): Long {
-        return System.currentTimeMillis() + 600000
+        return System.currentTimeMillis() + 10000
     }
 }
