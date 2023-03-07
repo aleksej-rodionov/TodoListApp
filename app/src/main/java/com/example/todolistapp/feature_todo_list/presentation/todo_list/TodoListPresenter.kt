@@ -11,6 +11,7 @@ import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
+import java.util.concurrent.TimeUnit
 
 @InjectViewState
 class TodoListPresenter(
@@ -32,7 +33,9 @@ class TodoListPresenter(
     private fun observeAllTodos() {
         viewState.showHideLoader(true)
         val output = todoUseCases.getAllTodos.invoke()
-        output.observeOn(AndroidSchedulers.mainThread())
+        output
+            .delay(400, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewState.showHideLoader(false)
                 viewState.showHideNoTodosText(it.isEmpty())
