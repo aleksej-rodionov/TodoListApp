@@ -13,7 +13,7 @@ interface TodoDao {
     fun insertTodo(todo: TodoEntity): Single<Long>
 
     @Update
-    fun updateRodo(todo: TodoEntity): Completable
+    fun updateTodo(todo: TodoEntity): Completable
 
     @Delete
     fun deleteTodo(todo: TodoEntity): Completable

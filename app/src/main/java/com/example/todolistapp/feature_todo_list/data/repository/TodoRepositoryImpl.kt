@@ -1,7 +1,6 @@
 package com.example.todolistapp.feature_todo_list.data.repository
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.example.todolistapp.feature_todo_list.data.local.TodoDao
 import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodo
 import com.example.todolistapp.feature_todo_list.data.local.mapper.toTodoEntity
@@ -9,12 +8,8 @@ import com.example.todolistapp.feature_todo_list.domain.model.Todo
 import com.example.todolistapp.feature_todo_list.domain.repository.TodoRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 
 private const val TAG = "TodoRepositoryImpl"
 
@@ -28,7 +23,7 @@ class TodoRepositoryImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override fun updateTodo(todo: Todo): Completable = todoDao.updateRodo(todo.toTodoEntity())
+    override fun updateTodo(todo: Todo): Completable = todoDao.updateTodo(todo.toTodoEntity())
         .subscribeOn(Schedulers.io())
 
     override fun deleteTodo(todo: Todo): Completable = todoDao.deleteTodo(todo.toTodoEntity())
