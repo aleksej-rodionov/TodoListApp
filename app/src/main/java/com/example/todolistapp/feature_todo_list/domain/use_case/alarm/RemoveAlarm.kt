@@ -20,8 +20,6 @@ class RemoveAlarm(
     operator fun invoke(todo: Todo) {
 
         todo.id?.let { id ->
-            Log.d(TAG_ALARM, "RemoveAlarm.invoke: CALLED for id = $id")
-
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
             val todoString = Gson().toJson(todo)

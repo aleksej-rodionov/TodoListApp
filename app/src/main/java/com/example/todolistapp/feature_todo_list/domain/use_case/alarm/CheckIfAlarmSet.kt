@@ -34,7 +34,6 @@ class CheckIfAlarmSet(
             } else PendingIntent.FLAG_NO_CREATE
         ) != null
 
-        Log.d(TAG_ALARM, "CheckIfAlarmSet.invoke: CALLED for id = $todoId, result = $isAlarmSet")
         return isAlarmSet
     }
 }
