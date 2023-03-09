@@ -34,7 +34,7 @@ class TodoListPresenter(
         viewState.showHideLoader(true)
         val output = todoUseCases.getAllTodos.invoke()
         output
-            .delay(400, TimeUnit.MILLISECONDS)
+            .delay(400, TimeUnit.MILLISECONDS) // искусственный delay. Можно убрать, портит UX
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 viewState.showHideLoader(false)
